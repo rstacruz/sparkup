@@ -17,6 +17,7 @@ A short screencast is available here:
 
 Usage and installation
 ----------------------
+You may download Sparkup from Github. [Download the latest version here](http://github.com/rstacruz/sparkup/archives/master).
 
  - **TextMate**: Simply double-click on the `Sparkup.tmbundle` package in Finder. This
    will install it automatically. In TextMate, open an HTML file (orset the document type to
