@@ -10,8 +10,18 @@ Usage
 You can write HTML in a CSS-like syntax, and have `sparkup` handle the expansion to full code.
 To use `sparkup` in the command line, simply do `echo "<your code here>" | sparkup`.
 
-Sparkup also offers intregration into common text editors (vim included; Textmate, Aptana and
-more to come soon).
+Sparkup also offers intregration into common text editors. Support for VIM and TextMate are
+currently included.
+
+Usage for text editors
+----------------------
+
+ - **TextMate**: Simply double-click on the `Sparkup.tmbundle` package in Finder. This
+   will install it automatically. In TextMate, open an HTML file (orset the document type to
+   HTML) type in something (e.g., `#header > h1`), then press `Ctrl` + `E`. Pressing `Tab`
+   will cycle through empty elements.
+
+ - **VIM**: See the `sparkup.vim` file's contents for details.
 
 Examples
 --------
