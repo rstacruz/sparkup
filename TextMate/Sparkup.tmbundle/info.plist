@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Sparkup</string>
+	<key>ordering</key>
+	<array>
+		<string>AA687F82-BF47-477C-A832-D3671736EA81</string>
+	</array>
+	<key>uuid</key>
+	<string>0CDE6908-2EF0-4E86-A9C1-5AC12E320414</string>
+</dict>
+</plist>

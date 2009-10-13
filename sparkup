@@ -61,10 +61,36 @@ class Parser:
         indent = re.findall("^[\r\n]*(\s*)", self.str)[0]
         output = indent + output.replace("\n", "\n" + indent)
 
+        # TextMate mode
+        if self.options.has("textmate"):
+            output = self._textmatify(output)
+
+        if self.options.has("no-last-newline"):
+            output = re.sub(r'\n[^\n\r]*$', '', output)
+
         return output
 
     # Protected methods 
     # --------------------------------------------------------------------------- 
+
+    def _textmatify(self, output):
+        """Returns a version of the output with TextMate placeholders in it.
+        """
+
+        matches = re.findall(r"(></)|(\n\s+)\n|(.|\s)", output)
+        output = ''
+        n = 1
+        for i in matches:
+            if i[0]:
+                output += '>$%i</' % n
+                n += 1
+            elif i[1]:
+                output += i[1] + '$%i\n' % n
+                n += 1
+            elif i[2]:
+                output += i[2]
+        output += "$0"
+        return output
 
     def _tokenize(self):
         """Tokenizes.
@@ -457,6 +483,7 @@ class Router:
         except:
             sys.stderr.write("Parse error. Check your input.\n")
             print sys.exc_info()[0]
+            print sys.exc_info()[1]
 
     def exit(self):
         sys.exit()
@@ -550,8 +577,10 @@ class Options:
         ('h', 'help', 'Shows help'),
         ('v', 'version', 'Shows the version'),
         ('', 'no-guides', 'Suppresses guide comments'),
+        ('', 'textmate', 'Adds snippet info (textmate mode)'),
         ('', 'indent-spaces:', 'Indent spaces'),
         ('', 'expand-divs', 'Automatically expand divs'),
+        ('', 'no-last-newline', 'Skip the trailing newline'),
     ]
     
     # Property: router
