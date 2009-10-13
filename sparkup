@@ -77,7 +77,7 @@ class Parser:
         """Returns a version of the output with TextMate placeholders in it.
         """
 
-        matches = re.findall(r"(></)|(\n\s+)\n|(.|\s)", output)
+        matches = re.findall(r'(></)|("")|(\n\s+)\n|(.|\s)', output)
         output = ''
         n = 1
         for i in matches:
@@ -85,10 +85,13 @@ class Parser:
                 output += '>$%i</' % n
                 n += 1
             elif i[1]:
-                output += i[1] + '$%i\n' % n
+                output += '"$%i"' % n
                 n += 1
             elif i[2]:
-                output += i[2]
+                output += i[2] + '$%i\n' % n
+                n += 1
+            elif i[3]:
+                output += i[3]
         output += "$0"
         return output
 
