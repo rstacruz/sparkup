@@ -4,6 +4,10 @@ Sparkup
 Install this by putting `sparkup` in your `$PATH` somewhere. Requires Python 2.5+ (comes
 preinstalled with Mac OS X).
 
+This project is inspired by [Zen Coding](http://code.google.com/p/zen-coding/) of
+[Vadim Makeev](http://pepelsbey.net). The Zen HTML syntax is forward-compatible with Sparkup
+(anything that Zen HTML can parse, Sparkup can too).
+
 Usage
 -----
 
