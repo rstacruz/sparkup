@@ -61,12 +61,13 @@ class Parser:
         indent = re.findall("^[\r\n]*(\s*)", self.str)[0]
         output = indent + output.replace("\n", "\n" + indent)
 
+        # Strip newline if not needed
+        if self.options.has("no-last-newline"):
+            output = re.sub(r'\n[^\n\r]*$', '', output)
+
         # TextMate mode
         if self.options.has("textmate"):
             output = self._textmatify(output)
-
-        if self.options.has("no-last-newline"):
-            output = re.sub(r'\n[^\n\r]*$', '', output)
 
         return output
 
