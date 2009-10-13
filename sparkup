@@ -63,7 +63,7 @@ class Parser:
 
         # Strip newline if not needed
         if self.options.has("no-last-newline"):
-            output = re.sub(r'\n[^\n\r]*$', '', output)
+            output = re.sub(r'\n\s*$', '', output)
 
         # TextMate mode
         if self.options.has("textmate"):
