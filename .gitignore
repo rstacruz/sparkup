@@ -1,0 +1,8 @@
+.DS_Store
+.project
+doc
+.sourcescribe_index
+*.swp
+*.swo
+cscope.out
+*~

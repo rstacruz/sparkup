@@ -1,0 +1,565 @@
+#!/usr/bin/env python
+# TODO:
+# - CLI: Change indent spaces: --indent 4
+
+# DONE:
+# - Command line options
+# - CLI: Disable guides: --no-guides
+# - Custom attributes: a[href=yeah]
+# - Short tags: <br/>
+# - Closing guides: </div><!-- #foo -->
+# - Multi-caret: ul > li*3 > a
+# - Content text: p{Hello}
+# - Numbers: ul > li.item-&*3 > a.item-&
+
+import os
+import fileinput
+import getopt
+import sys
+import re
+
+# =============================================================================== 
+
+class Parser:
+    """The parser.
+    """
+
+    # Constructor
+    # --------------------------------------------------------------------------- 
+
+    def __init__(self, options=None, str=''):
+        """Constructor.
+        """
+
+        self.str = str
+        self.options = options
+        self.root = Element(parser = self)
+        self.caret = []
+        self.caret.append(self.root)
+        self._last = []
+
+    # Methods 
+    # --------------------------------------------------------------------------- 
+
+    def load_string(self, str):
+        """Loads a string to parse.
+        """
+
+        self.str = str
+        self._tokenize()
+        self._parse()
+
+    def render(self):
+        """Renders.
+        Called by [[Router]].
+        """
+
+        # Get the initial render of the root node
+        output = self.root.render()
+
+        # Indent by whatever the input is indented with
+        indent = re.findall("^[\r\n]*(\s*)", self.str)[0]
+        output = indent + output.replace("\n", "\n" + indent)
+
+        return output
+
+    # Protected methods 
+    # --------------------------------------------------------------------------- 
+
+    def _tokenize(self):
+        """Tokenizes.
+        """
+
+        # Split by the element separators
+        for token in re.split('(<|>|\+(?!\\s*\+|$))', self.str):
+            if token.strip() != '':
+                self.tokens.append(Token(token))
+
+    def _parse(self):
+        """Takes the tokens and does its thing.
+        Populates [[self.root]].
+        """
+
+        for token in self.tokens:
+            if token.type == Token.ELEMENT:
+                # Reset the "last elements added" list. We will
+                # repopulate this with the new elements added now.
+                self._last[:] = []
+
+                # Create [[Element]]s from a [[Token]].
+                # They will be created as many as the multiplier specifies,
+                # multiplied by how many carets we have
+                count = 0
+                for caret in self.caret:
+                    local_count = 0
+                    for i in range(token.multiplier):
+                        count += 1
+                        local_count += 1
+                        new = Element(token, caret,
+                                count = count,
+                                local_count = local_count,
+                                parser = self)
+                        self._last.append(new)
+                        caret.append(new)
+
+            # For >
+            elif token.type == Token.CHILD:
+                # The last children added.
+                self.caret[:] = self._last
+
+            # For <
+            elif token.type == Token.PARENT:
+                # If we're the root node, don't do anything
+                parent = self.caret[0].parent
+                if parent is not None:
+                    self.caret[:] = [parent]
+        return
+
+    # Properties
+    # --------------------------------------------------------------------------- 
+
+    # Property: str
+    # The string
+    str = ''
+    tokens = []
+
+    # Property: options
+    # Reference to the [[Options]] instance
+    options = None
+
+    # Property: root
+    # The root [[Element]] node.
+    root = None 
+
+    # Property: caret
+    # The current insertion point.
+    caret = None
+
+    # Property: _last
+    # List of the last appended stuff
+    _last = None
+
+    # Property: indent
+    # Yeah
+    indent = ''
+    pass
+
+# =============================================================================== 
+
+class Element:
+    def __init__(self, token=None, parent=None, count=None, local_count=None, parser=None):
+        self.children = []
+        self.attributes = {}
+        self.parser = parser
+
+        if token is not None:
+            # Assumption is that token is of type [[Token]] and is
+            # a [[Token.ELEMENT]].
+            self.name       = token.name
+            self.attributes = token.attributes.copy()
+            self.text       = token.text
+            self.populate   = token.populate
+            self.expand     = token.expand
+
+        # `count` can be given. This will substitude & in classname and ID
+        if count is not None:
+            for key in self.attributes:
+                attrib = self.attributes[key]
+                attrib = attrib.replace('&', ("%i" % count))
+                if local_count is not None:
+                    attrib = attrib.replace('$', ("%i" % local_count))
+                self.attributes[key] = attrib
+
+        self._fill_attributes()
+
+        self.parent = parent
+        if parent is not None:
+            self.depth = parent.depth + 1
+
+        if self.populate: self._populate()
+
+    def render(self):
+        output = ""
+        try:    spaces_count = int(self.parser.options.options['indent-spaces'])
+        except: spaces_count = 4
+        spaces = ' ' * spaces_count
+        indent = self.depth * spaces
+
+        # Closing guide (e.g., </div><!-- /#header -->)
+        guide = ''
+        if ((not self.parser.options.has('no-guides')) and (self.name == 'div') and
+            (('id' in self.attributes) or ('class' in self.attributes))):
+
+            # Make the guide from the ID (/#header), or the class if there's no ID (/.item)
+            if 'id' in self.attributes:
+                guide += "#%s" % self.attributes['id']
+            elif 'class' in self.attributes:
+                guide += ".%s" % self.attributes['class'].replace(' ', '.')
+            guide = "<!-- /%s -->" % guide
+
+        # When it should be expanded
+        if  len(self.children) > 0 \
+            or self.expand \
+            or (self.parser.options.has('expand-divs') and self.name == 'div'):
+
+            for child in self.children:
+                output += child.render()
+
+            # For expand divs
+            if (output == ''): output = indent + spaces + "\n"
+
+            # Don't wrap if you're a root node
+            if self.name != '':
+                output = "%s<%s>\n%s%s</%s>%s\n" % (
+                        indent, self.get_tag(), output, indent, self.name, guide)
+
+        # Short tags (<br />)
+        elif self.name in ('img', 'br', 'hr', 'link', 'input', 'embed', 'param', 'base', 'area'):
+            output = "%s<%s />\n" % (indent, self.get_tag())
+
+        # Tags with text, possibly
+        elif self.name != '':
+            output = "%s<%s>%s</%s>%s\n" % \
+                (indent, self.get_tag(), self.text, self.name, guide)
+
+        # Else, it's an empty-named element (like the root). Pass.
+        else: pass
+
+        return output
+
+    def get_tag(self):
+        output = '%s' % (self.name)
+        for key, value in self.attributes.iteritems():
+            output += ' %s="%s"' % (key, value)
+        return output
+
+    def append(self, object):
+        self.children.append(object)
+
+    def get_last_child(self):
+        return self.children[-1]
+
+    def _populate(self):
+        """Expands with default items.
+
+        This is called when the [[populate]] flag is turned on.
+        """
+
+        if self.name == 'ul':
+            elements = [Element(token = Token('li'), parent=self, parser=self.parser)]
+
+        elif self.name == 'dl':
+            elements = [
+                Element(token = Token('dt'), parent=self, parser=self.parser),
+                Element(token = Token('dd'), parent=self, parser=self.parser)]
+
+        elif self.name == 'table':
+            tr = Element(token = Token('tr'), parent=self, parser=self.parser)
+            td = Element(token = Token('td'), parent=tr, parser=self.parser)
+            tr.children.append(td)
+            elements = [tr]
+
+        else:
+            elements = []
+
+        for el in elements:
+            self.children.append(el)
+
+
+    def _fill_attributes(self):
+        """Fills default attributes for certain elements.
+        Called by the constructor.
+        """
+
+        # Make sure <a>'s have a href, <img>'s have an src, etc.
+        required = {
+            'a':      {'href':''},
+            'link':   {'rel': 'stylesheet', 'href': ''},
+            'style':  {'type': 'text/css'},
+            'script': {'type': 'text/javascript'},
+            'img':    {'src':'', 'alt':''},
+            'form':   {'action': '', 'method': 'post'},
+            'table':  {'cellpadding': '0', 'cellspacing': '0'},
+            'input':  {'type': '', 'name': '', 'value': ''},
+            'base':   {'href': ''},
+            'area':   {'shape': '', 'coords': ''},
+        }
+
+        for element, attribs in required.iteritems():
+            if self.name == element:
+                for attrib in attribs:
+                    if attrib not in self.attributes:
+                        self.attributes[attrib] = attribs[attrib]
+
+    last_child = property(get_last_child)
+    parent = None
+    name = ''
+    attributes = None
+    children = None
+    text = ''
+    depth = -1
+    expand = False
+    populate = False
+    parser = None
+
+# =============================================================================== 
+
+class Token:
+    def __init__(self, str):
+        self.str = str.strip()
+        self.attributes = {}
+
+        # Set the type
+        if self.str == '<':
+            self.type = Token.PARENT
+        elif self.str == '>':
+            self.type = Token.CHILD
+        elif self.str == '+':
+            self.type = Token.SIBLING
+        else:
+            self.type = Token.ELEMENT
+            self._init_element()
+        
+    def _init_element(self):
+        """Initializes. Only called if the token is an element token.
+        [Private]
+        """
+        # Get the tag name. Default to DIV if none given.
+        self.name = re.findall('^(\w*)', self.str)[0]
+        if (self.name == ''): self.name = 'div'
+        self.name = self.name.lower()
+
+        # Get the class names
+        classes = []
+        for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
+            classes.append(classname)
+        if len(classes) > 0:
+            self.attributes['class'] = ' '.join(classes)
+
+        # Get the ID
+        id = None
+        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.str): pass
+        if id is not None:
+            self.attributes['id'] = id
+
+        # See if there's a multiplier (e.g., "li*3")
+        multiplier = None
+        for multiplier in re.findall('\*\s*([0-9]+)', self.str): pass
+        if multiplier is not None:
+            self.multiplier = int(multiplier)
+
+        # Look for attributes
+        attribs = []
+        for attrib in re.findall('\[([^\]]*)\]', self.str): attribs.append(attrib)
+        if len(attribs) > 0:
+            for attrib in attribs:
+                try:    key, value = attrib.split('=', 1)
+                except: key, value = [attrib, '']
+            self.attributes[key] = value
+
+        # Try looking for text
+        text = None
+        for text in re.findall('\{([^\}]*)\}', self.str): pass
+        if text is not None:
+            self.text = text
+
+        # Populate flag (e.g., ul+)
+        flags = None
+        for flags in re.findall('[\+\!]+$', self.str): pass
+        if flags is not None:
+            if '+' in flags: self.populate = True
+            if '!' in flags: self.expand = True
+
+    def __str__(self):
+        return self.str 
+
+    str = ''
+
+    # For elements
+    name = ''
+    attributes = None
+    multiplier = 1
+    expand = False
+    populate = False
+    text = ''
+
+    # Type
+    type = 0
+    ELEMENT = 2 
+    CHILD = 4
+    PARENT = 8
+    SIBLING = 16
+
+# =============================================================================== 
+
+class Router:
+    """The router.
+    """
+
+    # Constructor 
+    # --------------------------------------------------------------------------- 
+
+    def __init__(self):
+        pass
+
+    # Methods 
+    # --------------------------------------------------------------------------- 
+
+    def start(self):
+        self.options = Options(router = self, argv = sys.argv[1:])
+
+        if (self.options.has('help')):
+            self.help()
+
+        elif (self.options.has('version')):
+            self.version()
+
+        else:
+            self.parse()
+    
+    def help(self):
+        print "Usage: %s [OPTIONS]" % sys.argv[0]
+        print "Expands input into HTML."
+        print ""
+        for short, long, info in self.options.cmdline_keys:
+            if not short == '': short = '-%s,' % short
+            if not long  == '': long  = '--%s' % long
+
+            print "%6s %-20s %s" % (short, long, info)
+        print ""
+        print "\n".join(self.help_content)
+
+    def version(self):
+        print "Uhm, yeah."
+
+    def parse(self):
+        self.parser = Parser(self.options)
+
+        try:
+            # Read the files
+            lines = []
+            # for line in fileinput.input(): lines.append(line.rstrip(os.linesep))
+            lines = [sys.stdin.read()]
+            lines = " ".join(lines)
+
+        except KeyboardInterrupt:
+            pass
+
+        except:
+            sys.stderr.write("Reading failed.\n")
+            return
+            
+        try:
+            self.parser.load_string(lines)
+            output = self.parser.render()
+            sys.stdout.write(output)
+
+        except:
+            sys.stderr.write("Parse error. Check your input.\n")
+            print sys.exc_info()[0]
+
+    def exit(self):
+        sys.exit()
+
+    help_content = [
+        "Please refer to the manual for more information.",
+    ]
+
+    examples_content = [
+        "Here are some examples:",
+        "",
+        "div",
+        "",
+        "    <div></div>",
+        "",
+        "div#header",
+        "",
+        "    <div id=\"header\"></div>",
+        "",
+        "div.align-left#header",
+        "",
+        "    <div id=\"header\" class=\"align-left\"></div>",
+        "",
+        "#menu > ul",
+        "",
+        "    <div id=\"menu\">",
+        "        <ul></ul>",
+        "    </div>",
+        "",
+        "h3 + li + li",
+        "",
+        "    <h3></h3>",
+        "    <li></li>",
+        "    <li></li>",
+    ]
+
+# =============================================================================== 
+
+class Options:
+    def __init__(self, router, argv):
+        # Init self
+        self.router = router
+
+        # Prepare for getopt()
+        short_keys, long_keys = "", []
+        for short, long, info in self.cmdline_keys: # 'v', 'version'
+            short_keys += short
+            long_keys.append(long)
+
+        try:
+            getoptions, arguments = getopt.getopt(argv, short_keys, long_keys)
+        except getopt.GetoptError:
+            err = sys.exc_info()[1]
+            sys.stderr.write("Options error: %s\n" % err)
+            sys.stderr.write("Try --help for a list of arguments.\n")
+            return router.exit()
+
+        # Sort them out into options
+        options = {}
+        for option in getoptions:
+            key, value = option # '--version', ''
+
+            # If the key is long, write it
+            if key[0:2] == '--':
+                clean_key = key[2:]
+                if clean_key[-1] == ':': clean_key = clean_key[0:-1]
+                options[clean_key] = value
+
+            # If the key is short, look for the long version of it
+            elif key[0:1] == '-':
+                for short, long, info in self.cmdline_keys:
+                    if short == key[1:]:
+                        options[long] = value
+
+        # Done
+        for k, v in options.iteritems():
+            self.options[k] = v
+    
+    def __getattr__(self, attr):
+        try:    return self.options[attr]
+        except: return None
+
+    def has(self, attr):
+        try:    return self.options.has_key(attr)
+        except: return False
+
+    options = {
+        'indent-spaces': 4
+    }
+    cmdline_keys = [
+        ('h', 'help', 'Shows help'),
+        ('v', 'version', 'Shows the version'),
+        ('', 'no-guides', 'Suppresses guide comments'),
+        ('', 'indent-spaces:', 'Indent spaces'),
+        ('', 'expand-divs', 'Automatically expand divs'),
+    ]
+    
+    # Property: router
+    # Router
+    router = 1
+
+# =============================================================================== 
+
+if __name__ == "__main__":
+    z = Router()
+    z.start()
