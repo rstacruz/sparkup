@@ -569,26 +569,39 @@ class Options:
             sys.stderr.write("Try --help for a list of arguments.\n")
             return router.exit()
 
+        print getoptions
+        print arguments
+
         # Sort them out into options
         options = {}
+        i = 0
         for option in getoptions:
             key, value = option # '--version', ''
 
             # If the key is long, write it
             if key[0:2] == '--':
                 clean_key = key[2:]
-                if clean_key[-1] == ':': clean_key = clean_key[0:-1]
-                options[clean_key] = value
+                if clean_key[-1] == ':':
+                    options[clean_key[0:-1]] = arguments[i]
+                    i += 1
+                else:
+                    options[clean_key] = True 
 
             # If the key is short, look for the long version of it
             elif key[0:1] == '-':
                 for short, long, info in self.cmdline_keys:
                     if short == key[1:]:
-                        options[long] = value
+                        if long[-1] == ':':
+                            options[long[0:-1]] = arguments[i]
+                            i += 1
+                        else:
+                            options[long] = True
 
         # Done
         for k, v in options.iteritems():
             self.options[k] = v
+
+        print self.options
     
     def __getattr__(self, attr):
         try:    return self.options[attr]
