@@ -511,7 +511,7 @@ class Router:
         for short, long, info in self.options.cmdline_keys:
             if "Deprecated" in info: continue 
             if not short == '': short = '-%s,' % short
-            if not long  == '': long  = '--%s' % long.replace(":", " #")
+            if not long  == '': long  = '--%s' % long.replace("=", "=XXX")
 
             print "%6s %-25s %s" % (short, long, info)
         print ""
@@ -619,7 +619,7 @@ class Options:
         ('', 'no-guides', 'Deprecated'),
         ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
-        ('', 'indent-spaces:', 'Indent spaces'),
+        ('', 'indent-spaces=', 'Indent spaces'),
         ('', 'expand-divs', 'Automatically expand divs'),
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'),
