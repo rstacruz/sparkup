@@ -492,8 +492,11 @@ class Router:
     # Methods 
     # --------------------------------------------------------------------------- 
 
-    def start(self):
-        self.options = Options(router = self, argv = sys.argv[1:])
+    def start(self, options=None):
+        if (options):
+            self.options = Options(router=self, options=options, argv=None)
+        else:
+            self.options = Options(router=self, argv=sys.argv[1:], options=None)
 
         if (self.options.has('help')):
             self.help()
@@ -557,9 +560,15 @@ class Router:
 # =============================================================================== 
 
 class Options:
-    def __init__(self, router, argv):
+    def __init__(self, router, argv, options=None):
         # Init self
         self.router = router
+
+        # `options` can be given as a dict of stuff to preload
+        if options:
+            for k, v in options.iteritems():
+                self.options[k] = v
+            return
 
         # Prepare for getopt()
         short_keys, long_keys = "", []

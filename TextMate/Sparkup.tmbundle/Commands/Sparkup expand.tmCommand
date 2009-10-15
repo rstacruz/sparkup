@@ -5,7 +5,19 @@
 	<key>beforeRunningCommand</key>
 	<string>nop</string>
 	<key>command</key>
-	<string>"$TM_BUNDLE_SUPPORT/sparkup" --textmate --no-last-newline</string>
+	<string>#!/usr/bin/env python
+import sys; import os; sys.path.append(os.getenv('TM_BUNDLE_SUPPORT')); import sparkup
+
+# You may change these options to your liking.
+# Those starting with # are comments (disabled).
+options = {
+  'textmate': True,
+  'no-last-newline': True,
+ #'start-guide-format': 'Begin %s',
+ #'end-guide-format': 'End %s',
+}
+
+sparkup.Router().start(options=options)</string>
 	<key>fallbackInput</key>
 	<string>line</string>
 	<key>input</key>
@@ -16,9 +28,7 @@
 	<string>Sparkup expand</string>
 	<key>output</key>
 	<string>insertAsSnippet</string>
-	<key>scope</key>
-	<string>text.html</string>
 	<key>uuid</key>
-	<string>AA687F82-BF47-477C-A832-D3671736EA81</string>
+	<string>73A48D2B-D843-42A1-A288-0D1A6380043B</string>
 </dict>
 </plist>
