@@ -248,7 +248,7 @@ class Element:
 
         # Closing guide (e.g., </div><!-- /#header -->)
         guide = ''
-        if ((not self.parser.options.has('no-guides')) and (self.name == 'div') and
+        if ((self.parser.options.has('post-tag-guides')) and (self.name == 'div') and
             (('id' in self.attributes) or ('class' in self.attributes))):
 
             # Make the guide from the ID (/#header), or the class if there's no ID (/.item)
@@ -503,6 +503,7 @@ class Router:
         print "Expands input into HTML."
         print ""
         for short, long, info in self.options.cmdline_keys:
+            if "Deprecated" in info: continue 
             if not short == '': short = '-%s,' % short
             if not long  == '': long  = '--%s' % long.replace(":", " #")
 
@@ -603,7 +604,8 @@ class Options:
     cmdline_keys = [
         ('h', 'help', 'Shows help'),
         ('v', 'version', 'Shows the version'),
-        ('', 'no-guides', 'Suppresses guide comments'),
+        ('', 'no-guides', 'Deprecated'),
+        ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
         ('', 'indent-spaces:', 'Indent spaces'),
         ('', 'expand-divs', 'Automatically expand divs'),
