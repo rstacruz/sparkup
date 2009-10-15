@@ -304,15 +304,26 @@ class Element:
         # Make sure <a>'s have a href, <img>'s have an src, etc.
         required = {
             'a':      {'href':''},
+            'base':   {'href':''},
+            'abbr':   {'title': ''},
+            'acronym':{'title': ''},
+            'bdo':    {'dir': ''},
             'link':   {'rel': 'stylesheet', 'href': ''},
             'style':  {'type': 'text/css'},
             'script': {'type': 'text/javascript'},
             'img':    {'src':'', 'alt':''},
+            'iframe': {'src': '', 'frameborder': '0'},
+            'embed':  {'src': '', 'type': ''},
+            'object': {'data': '', 'type': ''},
+            'param':  {'name': '', 'value': ''},
             'form':   {'action': '', 'method': 'post'},
-            'table':  {'cellpadding': '0', 'cellspacing': '0'},
+            'table':  {'cellspacing': '0'},
             'input':  {'type': '', 'name': '', 'value': ''},
             'base':   {'href': ''},
-            'area':   {'shape': '', 'coords': ''},
+            'area':   {'shape': '', 'coords': '', 'href': '', 'alt': ''},
+            'select': {'name': ''},
+            'option': {'value': ''},
+            'textarea':{'name': ''},
         }
 
         for element, attribs in required.iteritems():
