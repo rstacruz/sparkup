@@ -62,7 +62,8 @@ class Parser:
         output = indent + output.replace("\n", "\n" + indent)
 
         # Strip newline if not needed
-        if self.options.has("no-last-newline"):
+        if self.options.has("no-last-newline") \
+            or self.prefix or self.suffix:
             output = re.sub(r'\n\s*$', '', output)
 
         # TextMate mode
@@ -98,10 +99,28 @@ class Parser:
 
     def _tokenize(self):
         """Tokenizes.
+        Initializes [[self.tokens]].
         """
 
+        str = self.str.strip()
+
+        # Find prefix/suffix
+        while True:
+            match = re.match(r"^(\s*<[^>]+>\s*)", str)
+            if match is None: break
+            if self.prefix is None: self.prefix = ''
+            self.prefix += match.group(0)
+            str = str[len(self.prefix):]
+
+        while True:
+            match = re.findall(r"(\s*<[^>]+>[\s\n\r]*)$", str)
+            if not match: break
+            if self.suffix is None: self.suffix = ''
+            self.suffix += match[0] 
+            str = str[:-len(self.suffix)]
+
         # Split by the element separators
-        for token in re.split('(<|>|\+(?!\\s*\+|$))', self.str):
+        for token in re.split('(<|>|\+(?!\\s*\+|$))', str):
             if token.strip() != '':
                 self.tokens.append(Token(token))
 
@@ -109,6 +128,11 @@ class Parser:
         """Takes the tokens and does its thing.
         Populates [[self.root]].
         """
+
+        if self.prefix or self.suffix:
+            self.root.prefix = self.prefix
+            self.root.suffix = self.suffix
+            self.root.depth += 1
 
         for token in self.tokens:
             if token.type == Token.ELEMENT:
@@ -172,6 +196,9 @@ class Parser:
     # Property: indent
     # Yeah
     indent = ''
+
+    prefix = ''
+    suffix = ''
     pass
 
 # =============================================================================== 
@@ -214,6 +241,10 @@ class Element:
         except: spaces_count = 4
         spaces = ' ' * spaces_count
         indent = self.depth * spaces
+        
+        prefix, suffix = ('', '')
+        if self.prefix: prefix = self.prefix + "\n"
+        if self.suffix: suffix = self.suffix
 
         # Closing guide (e.g., </div><!-- /#header -->)
         guide = ''
@@ -230,6 +261,7 @@ class Element:
         # When it should be expanded
         if  len(self.children) > 0 \
             or self.expand \
+            or prefix or suffix \
             or (self.parser.options.has('expand-divs') and self.name == 'div'):
 
             for child in self.children:
@@ -243,6 +275,10 @@ class Element:
                 output = "%s<%s>\n%s%s</%s>%s\n" % (
                         indent, self.get_tag(), output, indent, self.name, guide)
 
+            elif prefix or suffix:
+                output = "%s%s%s%s%s\n" % \
+                    (indent, prefix, output, suffix, guide)
+
         # Short tags (<br />)
         elif self.name in ('img', 'br', 'hr', 'link', 'input', 'embed', 'param', 'base', 'area'):
             output = "%s<%s />\n" % (indent, self.get_tag())
@@ -254,6 +290,7 @@ class Element:
 
         # Else, it's an empty-named element (like the root). Pass.
         else: pass
+
 
         return output
 
@@ -294,7 +331,6 @@ class Element:
 
         for el in elements:
             self.children.append(el)
-
 
     def _fill_attributes(self):
         """Fills default attributes for certain elements.
@@ -342,6 +378,9 @@ class Element:
     expand = False
     populate = False
     parser = None
+
+    prefix = None
+    suffix = None
 
 # =============================================================================== 
 
