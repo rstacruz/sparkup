@@ -1,16 +1,4 @@
 #!/usr/bin/env python
-# TODO:
-# - CLI: Change indent spaces: --indent 4
-
-# DONE:
-# - Command line options
-# - CLI: Disable guides: --no-guides
-# - Custom attributes: a[href=yeah]
-# - Short tags: <br/>
-# - Closing guides: </div><!-- #foo -->
-# - Multi-caret: ul > li*3 > a
-# - Content text: p{Hello}
-# - Numbers: ul > li.item-&*3 > a.item-&
 
 import os
 import fileinput
@@ -246,17 +234,35 @@ class Element:
         if self.prefix: prefix = self.prefix + "\n"
         if self.suffix: suffix = self.suffix
 
+        # Make the guide from the ID (/#header), or the class if there's no ID (/.item)
+        # This is for the start-guide, end-guide and post-tag-guides
+        guide_str = ''
+        if 'id' in self.attributes:
+            guide_str += "#%s" % self.attributes['id']
+        elif 'class' in self.attributes:
+            guide_str += ".%s" % self.attributes['class'].replace(' ', '.')
+
         # Closing guide (e.g., </div><!-- /#header -->)
         guide = ''
-        if ((self.parser.options.has('post-tag-guides')) and (self.name == 'div') and
+        start_guide = ''
+        end_guide = ''
+        if ((self.name == 'div') and \
             (('id' in self.attributes) or ('class' in self.attributes))):
 
-            # Make the guide from the ID (/#header), or the class if there's no ID (/.item)
-            if 'id' in self.attributes:
-                guide += "#%s" % self.attributes['id']
-            elif 'class' in self.attributes:
-                guide += ".%s" % self.attributes['class'].replace(' ', '.')
-            guide = "<!-- /%s -->" % guide
+            if (self.parser.options.has('post-tag-guides')):
+                guide = "<!-- /%s -->" % guide_str
+
+            if (self.parser.options.has('start-guide-format')):
+                format = self.parser.options.get('start-guide-format')
+                try: start_guide = format % guide_str
+                except: start_guide = (format + " " + guide_str).strip()
+                start_guide = "%s<!-- %s -->\n" % (indent, start_guide)
+
+            if (self.parser.options.has('end-guide-format')):
+                format = self.parser.options.get('end-guide-format')
+                try: end_guide = format % guide_str
+                except: end_guide = (format + " " + guide_str).strip()
+                end_guide = "\n%s<!-- %s -->" % (indent, end_guide)
 
         # When it should be expanded
         if  len(self.children) > 0 \
@@ -272,8 +278,8 @@ class Element:
 
             # Don't wrap if you're a root node
             if self.name != '':
-                output = "%s<%s>\n%s%s</%s>%s\n" % (
-                        indent, self.get_tag(), output, indent, self.name, guide)
+                output = "%s%s<%s>\n%s%s</%s>%s%s\n" % (
+                        start_guide, indent, self.get_tag(), output, indent, self.name, guide, end_guide)
 
             elif prefix or suffix:
                 output = "%s%s%s%s%s\n" % \
@@ -285,8 +291,8 @@ class Element:
 
         # Tags with text, possibly
         elif self.name != '':
-            output = "%s<%s>%s</%s>%s\n" % \
-                (indent, self.get_tag(), self.text, self.name, guide)
+            output = "%s%s<%s>%s</%s>%s%s\n" % \
+                (start_guide, indent, self.get_tag(), self.text, self.name, guide, end_guide)
 
         # Else, it's an empty-named element (like the root). Pass.
         else: pass
@@ -507,7 +513,7 @@ class Router:
             if not short == '': short = '-%s,' % short
             if not long  == '': long  = '--%s' % long.replace(":", " #")
 
-            print "%6s %-20s %s" % (short, long, info)
+            print "%6s %-25s %s" % (short, long, info)
         print ""
         print "\n".join(self.help_content)
 
@@ -563,6 +569,7 @@ class Options:
 
         try:
             getoptions, arguments = getopt.getopt(argv, short_keys, long_keys)
+
         except getopt.GetoptError:
             err = sys.exc_info()[1]
             sys.stderr.write("Options error: %s\n" % err)
@@ -574,31 +581,28 @@ class Options:
         i = 0
         for option in getoptions:
             key, value = option # '--version', ''
+            if (value == ''): value = True
 
             # If the key is long, write it
             if key[0:2] == '--':
                 clean_key = key[2:]
-                if clean_key[-1] == ':':
-                    options[clean_key[0:-1]] = arguments[i]
-                    i += 1
-                else:
-                    options[clean_key] = True 
+                options[clean_key] = value
 
             # If the key is short, look for the long version of it
             elif key[0:1] == '-':
                 for short, long, info in self.cmdline_keys:
                     if short == key[1:]:
-                        if long[-1] == ':':
-                            options[long[0:-1]] = arguments[i]
-                            i += 1
-                        else:
-                            options[long] = True
+                        print long
+                        options[long] = True
 
         # Done
         for k, v in options.iteritems():
             self.options[k] = v
-    
+
     def __getattr__(self, attr):
+        return self.get(attr)
+
+    def get(self, attr):
         try:    return self.options[attr]
         except: return None
 
@@ -618,6 +622,8 @@ class Options:
         ('', 'indent-spaces:', 'Indent spaces'),
         ('', 'expand-divs', 'Automatically expand divs'),
         ('', 'no-last-newline', 'Skip the trailing newline'),
+        ('', 'start-guide-format=', 'To be documented'),
+        ('', 'end-guide-format=', 'To be documented'),
     ]
     
     # Property: router
