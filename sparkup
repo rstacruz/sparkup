@@ -569,9 +569,6 @@ class Options:
             sys.stderr.write("Try --help for a list of arguments.\n")
             return router.exit()
 
-        print getoptions
-        print arguments
-
         # Sort them out into options
         options = {}
         i = 0
@@ -600,8 +597,6 @@ class Options:
         # Done
         for k, v in options.iteritems():
             self.options[k] = v
-
-        print self.options
     
     def __getattr__(self, attr):
         try:    return self.options[attr]
