@@ -279,8 +279,8 @@ class Element:
                 output = "%s%s%s%s%s\n" % \
                     (indent, prefix, output, suffix, guide)
 
-        # Short tags (<br />)
-        elif self.name in ('img', 'br', 'hr', 'link', 'input', 'embed', 'param', 'base', 'area'):
+        # Short, self-closing tags (<br />)
+        elif self.name in ('area', 'base', 'basefont', 'br', 'embed', 'hr', 'input', 'img', 'link', 'param', 'meta'):
             output = "%s<%s />\n" % (indent, self.get_tag())
 
         # Tags with text, possibly
@@ -360,6 +360,7 @@ class Element:
             'select': {'name': ''},
             'option': {'value': ''},
             'textarea':{'name': ''},
+            'meta':   {'content': ''},
         }
 
         for element, attribs in required.iteritems():
@@ -503,7 +504,7 @@ class Router:
         print ""
         for short, long, info in self.options.cmdline_keys:
             if not short == '': short = '-%s,' % short
-            if not long  == '': long  = '--%s' % long
+            if not long  == '': long  = '--%s' % long.replace(":", " #")
 
             print "%6s %-20s %s" % (short, long, info)
         print ""
