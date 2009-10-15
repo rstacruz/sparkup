@@ -110,14 +110,14 @@ class Parser:
             if match is None: break
             if self.prefix is None: self.prefix = ''
             self.prefix += match.group(0)
-            str = str[len(self.prefix):]
+            str = str[len(match.group(0)):]
 
         while True:
             match = re.findall(r"(\s*<[^>]+>[\s\n\r]*)$", str)
             if not match: break
             if self.suffix is None: self.suffix = ''
-            self.suffix += match[0] 
-            str = str[:-len(self.suffix)]
+            self.suffix = match[0] + self.suffix
+            str = str[:-len(match[0])]
 
         # Split by the element separators
         for token in re.split('(<|>|\+(?!\\s*\+|$))', str):
@@ -545,34 +545,6 @@ class Router:
 
     help_content = [
         "Please refer to the manual for more information.",
-    ]
-
-    examples_content = [
-        "Here are some examples:",
-        "",
-        "div",
-        "",
-        "    <div></div>",
-        "",
-        "div#header",
-        "",
-        "    <div id=\"header\"></div>",
-        "",
-        "div.align-left#header",
-        "",
-        "    <div id=\"header\" class=\"align-left\"></div>",
-        "",
-        "#menu > ul",
-        "",
-        "    <div id=\"menu\">",
-        "        <ul></ul>",
-        "    </div>",
-        "",
-        "h3 + li + li",
-        "",
-        "    <h3></h3>",
-        "    <li></li>",
-        "    <li></li>",
     ]
 
 # =============================================================================== 
