@@ -350,7 +350,7 @@ class Element:
 
         # Short, self-closing tags (<br />)
         elif self.name in short_tags: 
-            output = "%s<%s />\n" % (indent, self.get_tag())
+            output = "%s<%s />\n" % (indent, self.get_default_tag())
 
         # Tags with text, possibly
         elif self.name != '' or \
@@ -594,6 +594,7 @@ class Token:
                     'opening_tag': '<!--[if !IE]><!-->',
                     'closing_tag': '<!--<![endif]-->'},
                 'html:4t': {
+                    'expand': True,
                     'opening_tag':
                         '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">\n' +
                         '<html lang="en">\n' +
@@ -606,6 +607,7 @@ class Token:
                         '</body>\n' +
                         '</html>'},
                 'html:4s': {
+                    'expand': True,
                     'opening_tag':
                         '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\n' +
                         '<html lang="en">\n' +
@@ -618,6 +620,7 @@ class Token:
                         '</body>\n' +
                         '</html>'},
                 'html:xs': {
+                    'expand': True,
                     'opening_tag':
                         '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' +
                         '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
@@ -630,6 +633,7 @@ class Token:
                         '</body>\n' +
                         '</html>'},
                 'html:xxs': {
+                    'expand': True,
                     'opening_tag':
                         '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n' +
                         '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
@@ -642,6 +646,7 @@ class Token:
                         '</body>\n' +
                         '</html>'},
                 'html:5': {
+                    'expand': True,
                     'opening_tag':
                         '<!DOCTYPE html>\n' +
                         '<html lang="en">\n' +
@@ -653,13 +658,22 @@ class Token:
                     'closing_tag':
                         '</body>\n' +
                         '</html>'},
+                'input:button': {
+                    'name': 'input',
+                    'attributes': {
+                        'class': 'button',
+                        'type': 'button',
+                        'name': '',
+                        'value': ''}
+                    },
                 }
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
                     setattr(self, key, value)
-                return
+                if 'html' in name:
+                    return
 
-        if (name == ''): self.name = 'div'
+        elif (name == ''): self.name = 'div'
         else: self.name = name
 
         # Get the class names
