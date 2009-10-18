@@ -573,8 +573,8 @@ class Token:
 
 
         # Get the tag name. Default to DIV if none given.
-        name = re.findall('^([\w:]*)', self.str)[0]
-        name = name.lower()
+        name = re.findall('^([\w\-:]*)', self.str)[0]
+        name = name.lower().replace('-', ':')
         if ':' in name:
             try:    spaces_count = int(self.parser.options.get('indent-spaces'))
             except: spaces_count = 4
@@ -660,11 +660,87 @@ class Token:
                         '</html>'},
                 'input:button': {
                     'name': 'input',
-                    'attributes': {
-                        'class': 'button',
-                        'type': 'button',
-                        'name': '',
-                        'value': ''}
+                    'attributes': { 'class': 'button', 'type': 'button', 'name': '', 'value': '' }
+                    },
+                'input:b': {
+                    'name': 'input',
+                    'attributes': { 'class': 'button', 'type': 'button', 'name': '', 'value': '' }
+                    },
+                'input:password': {
+                    'name': 'input',
+                    'attributes': { 'class': 'text password', 'type': 'password', 'name': '', 'value': '' }
+                    },
+                'input:radio': {
+                    'name': 'input',
+                    'attributes': { 'class': 'radio', 'type': 'radio', 'name': '', 'value': '' }
+                    },
+                'input:r': {
+                    'name': 'input',
+                    'attributes': { 'class': 'radio', 'type': 'radio', 'name': '', 'value': '' }
+                    },
+                'input:checkbox': {
+                    'name': 'input',
+                    'attributes': { 'class': 'checkbox', 'type': 'checkbox', 'name': '', 'value': '' }
+                    },
+                'input:c': {
+                    'name': 'input',
+                    'attributes': { 'class': 'checkbox', 'type': 'checkbox', 'name': '', 'value': '' }
+                    },
+                'input:file': {
+                    'name': 'input',
+                    'attributes': { 'class': 'file', 'type': 'file', 'name': '', 'value': '' }
+                    },
+                'input:submit': {
+                    'name': 'input',
+                    'attributes': { 'class': 'submit', 'type': 'submit', 'value': '' }
+                    },
+                'input:s': {
+                    'name': 'input',
+                    'attributes': { 'class': 'submit', 'type': 'submit',  'value': '' }
+                    },
+                'input:hidden': {
+                    'name': 'input',
+                    'attributes': { 'type': 'hidden', 'name': '', 'value': '' }
+                    },
+                'input:h': {
+                    'name': 'input',
+                    'attributes': { 'type': 'hidden', 'name': '', 'value': '' }
+                    },
+                'script:src': {
+                    'name': 'script',
+                    'attributes': { 'src': '' }
+                    },
+                'link:css': {
+                    'name': 'link',
+                    'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
+                    },
+                'link:print': {
+                    'name': 'link',
+                    'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'print' },
+                    },
+                'link:favicon': {
+                    'name': 'link',
+                    'attributes': { 'rel': 'shortcut icon', 'type': 'image/x-icon', 'href': '' },
+                    },
+                'link:touch': {
+                    'name': 'link',
+                    'attributes': { 'rel': 'apple-touch-icon', 'href': '' },
+                    },
+                'link:rss': {
+                    'name': 'link',
+                    'attributes': { 'rel': 'alternate', 'type': 'application/rss+xml', 'title': 'RSS', 'href': '' },
+                    },
+                'link:atom': {
+                    'name': 'link',
+                    'attributes': { 'rel': 'alternate', 'type': 'application/atom+xml', 'title': 'Atom', 'href': '' },
+                    },
+                'meta:ie7': {
+                    'name': 'meta',
+                    'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=7' },
+                    },
+                'meta:ie8': {
+                    'name': 'meta',
+                    'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=8' },
                     },
                 }
             if name in shortcuts.keys():
@@ -681,7 +757,10 @@ class Token:
         for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
             classes.append(classname)
         if len(classes) > 0:
-            self.attributes['class'] = ' '.join(classes)
+            try:    self.attributes['class']
+            except: self.attributes['class'] = ''
+            self.attributes['class'] += ' ' + ' '.join(classes)
+            self.attributes['class'] = self.attributes['class'].strip()
 
         # Get the ID
         id = None
