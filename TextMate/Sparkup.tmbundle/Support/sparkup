@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+version = "0.1.2"
 
 import os
 import fileinput
@@ -21,7 +23,7 @@ class Parser:
 
         self.str = str
         self.options = options
-        self.root = Element(parser = self)
+        self.root = Element(parser=self)
         self.caret = []
         self.caret.append(self.root)
         self._last = []
@@ -110,13 +112,14 @@ class Parser:
         # Split by the element separators
         for token in re.split('(<|>|\+(?!\\s*\+|$))', str):
             if token.strip() != '':
-                self.tokens.append(Token(token))
+                self.tokens.append(Token(token, parser=self))
 
     def _parse(self):
         """Takes the tokens and does its thing.
         Populates [[self.root]].
         """
 
+        # Carry it over to the root node.
         if self.prefix or self.suffix:
             self.root.prefix = self.prefix
             self.root.suffix = self.suffix
@@ -185,14 +188,45 @@ class Parser:
     # Yeah
     indent = ''
 
+    # Property: prefix
+    # (String) The trailing tag in the beginning.
+    #
+    # Description:
+    # For instance, in `<div>ul>li</div>`, the `prefix` is `<div>`.
     prefix = ''
+
+    # Property: suffix
+    # (string) The trailing tag at the end.
     suffix = ''
     pass
 
 # =============================================================================== 
 
 class Element:
-    def __init__(self, token=None, parent=None, count=None, local_count=None, parser=None):
+    """An element.
+    """
+
+    def __init__(self, token=None, parent=None, count=None, local_count=None, \
+                 parser=None, opening_tag=None, closing_tag=None, \
+                 attributes=None, name=None, text=None):
+        """Constructor.
+
+        This is called by ???.
+
+        Description:
+        All parameters are optional.
+
+        token       - (Token) The token (required)
+        parent      - (Element) Parent element; `None` if root
+        count       - (Int) The number to substitute for `&` (e.g., in `li.item-$`)
+        local_count - (Int) The number to substitute for `$` (e.g., in `li.item-&`)
+        parser      - (Parser) The parser
+
+        attributes  - ...
+        name        - ...
+        text        - ...
+        """
+
         self.children = []
         self.attributes = {}
         self.parser = parser
@@ -200,11 +234,13 @@ class Element:
         if token is not None:
             # Assumption is that token is of type [[Token]] and is
             # a [[Token.ELEMENT]].
-            self.name       = token.name
-            self.attributes = token.attributes.copy()
-            self.text       = token.text
-            self.populate   = token.populate
-            self.expand     = token.expand
+            self.name        = token.name
+            self.attributes  = token.attributes.copy()
+            self.text        = token.text
+            self.populate    = token.populate
+            self.expand      = token.expand
+            self.opening_tag = token.opening_tag
+            self.closing_tag = token.closing_tag
 
         # `count` can be given. This will substitude & in classname and ID
         if count is not None:
@@ -215,6 +251,11 @@ class Element:
                     attrib = attrib.replace('$', ("%i" % local_count))
                 self.attributes[key] = attrib
 
+        # Copy over from parameters
+        if attributes: self.attributes = attribues
+        if name:       self.name       = name
+        if text:       self.text       = text
+
         self._fill_attributes()
 
         self.parent = parent
@@ -224,6 +265,11 @@ class Element:
         if self.populate: self._populate()
 
     def render(self):
+        """Renders the element, along with it's subelements, into HTML code.
+
+        [Grouped under "Rendering methods"]
+        """
+
         output = ""
         try:    spaces_count = int(self.parser.options.options['indent-spaces'])
         except: spaces_count = 4
@@ -242,7 +288,8 @@ class Element:
         elif 'class' in self.attributes:
             guide_str += ".%s" % self.attributes['class'].replace(' ', '.')
 
-        # Closing guide (e.g., </div><!-- /#header -->)
+        # Build the post-tag guide (e.g., </div><!-- /#header -->),
+        # the start guide, and the end guide.
         guide = ''
         start_guide = ''
         end_guide = ''
@@ -264,7 +311,14 @@ class Element:
                 except: end_guide = (format + " " + guide_str).strip()
                 end_guide = "\n%s<!-- %s -->" % (indent, end_guide)
 
-        # When it should be expanded
+        # Short, self-closing tags (<br />)
+        short_tags = \
+            ('area', 'base', 'basefont', 'br', 'embed', 'hr', \
+            'input', 'img', 'link', 'param', 'meta')
+
+        # When it should be expanded..
+        # (That is, <div>\n...\n</div> or similar -- wherein something must go
+        # inside the opening/closing tags)
         if  len(self.children) > 0 \
             or self.expand \
             or prefix or suffix \
@@ -273,26 +327,40 @@ class Element:
             for child in self.children:
                 output += child.render()
 
-            # For expand divs
+            # For expand divs: if there are no children (that is, `output`
+            # is still blank despite above), fill it with a blank line.
             if (output == ''): output = indent + spaces + "\n"
 
-            # Don't wrap if you're a root node
-            if self.name != '':
-                output = "%s%s<%s>\n%s%s</%s>%s%s\n" % (
-                        start_guide, indent, self.get_tag(), output, indent, self.name, guide, end_guide)
-
-            elif prefix or suffix:
+            # If we're a root node and we have a prefix or suffix...
+            # (Only the root node can have a prefix or suffix.)
+            if prefix or suffix:
                 output = "%s%s%s%s%s\n" % \
                     (indent, prefix, output, suffix, guide)
 
+            # Uh..
+            elif self.name != '' or \
+                 self.opening_tag is not None or \
+                 self.closing_tag is not None:
+                output = start_guide + \
+                         indent + self.get_opening_tag() + "\n" + \
+                         output + \
+                         indent + self.get_closing_tag() + \
+                         guide + end_guide + "\n"
+            
+
         # Short, self-closing tags (<br />)
-        elif self.name in ('area', 'base', 'basefont', 'br', 'embed', 'hr', 'input', 'img', 'link', 'param', 'meta'):
+        elif self.name in short_tags: 
             output = "%s<%s />\n" % (indent, self.get_tag())
 
         # Tags with text, possibly
-        elif self.name != '':
-            output = "%s%s<%s>%s</%s>%s%s\n" % \
-                (start_guide, indent, self.get_tag(), self.text, self.name, guide, end_guide)
+        elif self.name != '' or \
+             self.opening_tag is not None or \
+             self.closing_tag is not None:
+            output = "%s%s%s%s%s%s%s%s" % \
+                (start_guide, indent, self.get_opening_tag(), \
+                 self.text, \
+                 self.get_closing_tag(), \
+                 guide, end_guide, "\n")
 
         # Else, it's an empty-named element (like the root). Pass.
         else: pass
@@ -300,16 +368,62 @@ class Element:
 
         return output
 
-    def get_tag(self):
+    def get_default_tag(self):
+        """Returns the opening tag (without brackets).
+
+        Usage:
+            element.get_default_tag()
+
+        [Grouped under "Rendering methods"]
+        """
+
         output = '%s' % (self.name)
         for key, value in self.attributes.iteritems():
             output += ' %s="%s"' % (key, value)
         return output
 
+    def get_opening_tag(self):
+        if self.opening_tag is None:
+            return "<%s>" % self.get_default_tag()
+        else:
+            return self.opening_tag
+
+    def get_closing_tag(self):
+        if self.closing_tag is None:
+            return "</%s>" % self.name
+        else:
+            return self.closing_tag
+
     def append(self, object):
+        """Registers an element as a child of this element.
+
+        Usage:
+            element.append(child)
+
+        Description:
+        Adds a given element `child` to the children list of this element. It
+        will be rendered when [[render()]] is called on the element.
+
+        See also:
+        - [[get_last_child()]]
+
+        [Grouped under "Traversion methods"]
+        """
+
         self.children.append(object)
 
     def get_last_child(self):
+        """Returns the last child element which was [[append()]]ed to this element.
+
+        Usage:
+            element.get_last_child()
+
+        Description:
+        This is the same as using `element.children[-1]`.
+
+        [Grouped under "Traversion methods"]
+        """
+
         return self.children[-1]
 
     def _populate(self):
@@ -319,16 +433,16 @@ class Element:
         """
 
         if self.name == 'ul':
-            elements = [Element(token = Token('li'), parent=self, parser=self.parser)]
+            elements = [Element(name='li', parent=self, parser=self.parser)]
 
         elif self.name == 'dl':
             elements = [
-                Element(token = Token('dt'), parent=self, parser=self.parser),
-                Element(token = Token('dd'), parent=self, parser=self.parser)]
+                Element(name='dt', parent=self, parser=self.parser),
+                Element(name='dd', parent=self, parser=self.parser)]
 
         elif self.name == 'table':
-            tr = Element(token = Token('tr'), parent=self, parser=self.parser)
-            td = Element(token = Token('td'), parent=tr, parser=self.parser)
+            tr = Element(name='tr', parent=self, parser=self.parser)
+            td = Element(name='td', parent=tr, parser=self.parser)
             tr.children.append(td)
             elements = [tr]
 
@@ -340,7 +454,11 @@ class Element:
 
     def _fill_attributes(self):
         """Fills default attributes for certain elements.
-        Called by the constructor.
+
+        Description:
+        This is called by the constructor.
+
+        [Protected, grouped under "Protected methods"]
         """
 
         # Make sure <a>'s have a href, <img>'s have an src, etc.
@@ -375,28 +493,69 @@ class Element:
                     if attrib not in self.attributes:
                         self.attributes[attrib] = attribs[attrib]
 
+    # ---------------------------------------------------------------------------
+
+    # Property: last_child
+    # [Read-only]
     last_child = property(get_last_child)
+
+    # ---------------------------------------------------------------------------
+
+    # Property: parent
+    # (Element) The parent element.
     parent = None
+
+    # Property: name
+    # (String) The name of the element (e.g., `div`)
     name = ''
+
+    # Property: attributes
+    # (Dict) The dictionary of attributes (e.g., `{'src': 'image.jpg'}`)
     attributes = None
+
+    # Property: children
+    # (List of Elements) The children
     children = None
+
+    # Property: opening_tag
+    # (String or None) The opening tag. Optional; will use `name` and
+    # `attributes` if this is not given.
+    opening_tag = None
+
+    # Property: closing_tag
+    # (String or None) The closing tag
+    closing_tag = None
+
     text = ''
     depth = -1
     expand = False
     populate = False
     parser = None
 
+    # Property: prefix
+    # Only the root note can have this.
     prefix = None
     suffix = None
 
 # =============================================================================== 
 
 class Token:
-    def __init__(self, str):
+    def __init__(self, str, parser=None):
+        """Token.
+
+        Description:
+        str   - The string to parse
+
+        In the string `div > ul`, there are 3 tokens. (`div`, `>`, and `ul`)
+
+        For `>`, it will be a `Token` with `type` set to `Token.CHILD`
+        """
+
         self.str = str.strip()
         self.attributes = {}
+        self.parser = parser
 
-        # Set the type
+        # Set the type.
         if self.str == '<':
             self.type = Token.PARENT
         elif self.str == '>':
@@ -411,10 +570,97 @@ class Token:
         """Initializes. Only called if the token is an element token.
         [Private]
         """
+
+
         # Get the tag name. Default to DIV if none given.
-        self.name = re.findall('^(\w*)', self.str)[0]
-        if (self.name == ''): self.name = 'div'
-        self.name = self.name.lower()
+        name = re.findall('^([\w:]*)', self.str)[0]
+        name = name.lower()
+        if ':' in name:
+            try:    spaces_count = int(self.parser.options.get('indent-spaces'))
+            except: spaces_count = 4
+            indent = ' ' * spaces_count
+
+            shortcuts = {
+                'cc:ie': {
+                    'opening_tag': '<!--[if IE]>',
+                    'closing_tag': '<![endif]-->'},
+                'cc:ie6': {
+                    'opening_tag': '<!--[if lte IE 6]>',
+                    'closing_tag': '<![endif]-->'},
+                'cc:ie7': {
+                    'opening_tag': '<!--[if lte IE 7]>',
+                    'closing_tag': '<![endif]-->'},
+                'cc:noie': {
+                    'opening_tag': '<!--[if !IE]><!-->',
+                    'closing_tag': '<!--<![endif]-->'},
+                'html:4t': {
+                    'opening_tag':
+                        '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">\n' +
+                        '<html lang="en">\n' +
+                        '<head>\n' +
+                        indent + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                        indent + '<title></title>\n' + 
+                        '</head>\n' +
+                        '<body>',
+                    'closing_tag':
+                        '</body>\n' +
+                        '</html>'},
+                'html:4s': {
+                    'opening_tag':
+                        '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\n' +
+                        '<html lang="en">\n' +
+                        '<head>\n' +
+                        indent + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                        indent + '<title></title>\n' + 
+                        '</head>\n' +
+                        '<body>',
+                    'closing_tag':
+                        '</body>\n' +
+                        '</html>'},
+                'html:xs': {
+                    'opening_tag':
+                        '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' +
+                        '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
+                        '<head>\n' +
+                        indent + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                        indent + '<title></title>\n' + 
+                        '</head>\n' +
+                        '<body>',
+                    'closing_tag':
+                        '</body>\n' +
+                        '</html>'},
+                'html:xxs': {
+                    'opening_tag':
+                        '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n' +
+                        '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
+                        '<head>\n' +
+                        indent + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                        indent + '<title></title>\n' + 
+                        '</head>\n' +
+                        '<body>',
+                    'closing_tag':
+                        '</body>\n' +
+                        '</html>'},
+                'html:5': {
+                    'opening_tag':
+                        '<!DOCTYPE html>\n' +
+                        '<html lang="en">\n' +
+                        '<head>\n' +
+                        indent + '<meta charset="UTF-8" />\n' +
+                        indent + '<title></title>\n' + 
+                        '</head>\n' +
+                        '<body>',
+                    'closing_tag':
+                        '</body>\n' +
+                        '</html>'},
+                }
+            if name in shortcuts.keys():
+                for key, value in shortcuts[name].iteritems():
+                    setattr(self, key, value)
+                return
+
+        if (name == ''): self.name = 'div'
+        else: self.name = name
 
         # Get the class names
         classes = []
@@ -461,14 +707,18 @@ class Token:
         return self.str 
 
     str = ''
+    parser = None
 
     # For elements
+    # See the properties of `Element` for description on these.
     name = ''
     attributes = None
     multiplier = 1
     expand = False
     populate = False
     text = ''
+    opening_tag = None
+    closing_tag = None
 
     # Type
     type = 0
