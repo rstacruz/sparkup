@@ -742,12 +742,30 @@ class Token:
                     'name': 'meta',
                     'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=8' },
                     },
+                'form:get': {
+                    'name': 'form',
+                    'attributes': { 'method': 'get' },
+                    },
+                'form:g': {
+                    'name': 'form',
+                    'attributes': { 'method': 'get' },
+                    },
+                'form:post': {
+                    'name': 'form',
+                    'attributes': { 'method': 'post' },
+                    },
+                'form:p': {
+                    'name': 'form',
+                    'attributes': { 'method': 'post' },
+                    },
                 }
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
                     setattr(self, key, value)
                 if 'html' in name:
                     return
+            else:
+                self.name = name
 
         elif (name == ''): self.name = 'div'
         else: self.name = name
