@@ -261,6 +261,7 @@ class Parser:
         """Constructor.
         """
 
+        self.tokens = []
         self.str = str
         self.options = options
         self.dialect = dialect
@@ -904,20 +905,20 @@ class Router:
     # Methods 
     # --------------------------------------------------------------------------- 
 
-    def start(self, options=None):
+    def start(self, options=None, str=None, ret=None):
         if (options):
             self.options = Options(router=self, options=options, argv=None)
         else:
             self.options = Options(router=self, argv=sys.argv[1:], options=None)
 
         if (self.options.has('help')):
-            self.help()
+            return self.help()
 
         elif (self.options.has('version')):
-            self.version()
+            return self.version()
 
         else:
-            self.parse()
+            return self.parse(str=str, ret=ret)
     
     def help(self):
         print "Usage: %s [OPTIONS]" % sys.argv[0]
@@ -935,15 +936,17 @@ class Router:
     def version(self):
         print "Uhm, yeah."
 
-    def parse(self):
+    def parse(self, str=None, ret=None):
         self.parser = Parser(self.options)
 
         try:
             # Read the files
-            lines = []
             # for line in fileinput.input(): lines.append(line.rstrip(os.linesep))
-            lines = [sys.stdin.read()]
-            lines = " ".join(lines)
+            if str is not None:
+                lines = str
+            else:
+                lines = [sys.stdin.read()]
+                lines = " ".join(lines)
 
         except KeyboardInterrupt:
             pass
@@ -955,6 +958,7 @@ class Router:
         try:
             self.parser.load_string(lines)
             output = self.parser.render()
+            if ret: return output
             sys.stdout.write(output)
 
         except:

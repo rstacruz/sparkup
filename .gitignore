@@ -4,5 +4,6 @@ doc
 .sourcescribe_index
 *.swp
 *.swo
+*.pyc
 cscope.out
 *~
