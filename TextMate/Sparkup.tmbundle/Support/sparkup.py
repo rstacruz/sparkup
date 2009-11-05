@@ -144,6 +144,18 @@ class HtmlDialect(Dialect):
             'name': 'script',
             'attributes': { 'src': '' }
             },
+        'script:jquery': {
+            'name': 'script',
+            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js' }
+            },
+        'script:jsapi': {
+            'name': 'script',
+            'attributes': { 'src': 'http://www.google.com/jsapi' }
+            },
+        'script:jsapix': {
+            'name': 'script',
+            'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
+            },
         'link:css': {
             'name': 'link',
             'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
@@ -199,26 +211,37 @@ class HtmlDialect(Dialect):
         'input:c': 'input:checkbox',
         'button': 'input:button',
         'input:b': 'input:button',
+        'input:h': 'input:hidden',
+        'hidden': 'input:hidden',
         'submit': 'input:submit',
         'input:s': 'input:submit',
         'radio': 'input:radio',
         'input:r': 'input:radio',
         'text': 'input:text',
+        'passwd': 'input:password',
+        'password': 'input:password',
+        'pw': 'input:password',
         'input:t': 'input:text',
         'linkcss': 'link:css',
         'scriptsrc': 'script:src',
+        'jquery': 'script:jquery',
+        'jsapi': 'script:jsapi',
         'html5': 'html:5',
         'html4': 'html:4s',
         'html4s': 'html:4s',
-        'html4l': 'html:4l',
+        'html4t': 'html:4t',
         'xhtml': 'html:xxs',
         'xhtmlt': 'html:xt',
         'xhtmls': 'html:xs',
         'xhtml11': 'html:xxs',
+        'opt': 'option',
+        'st': 'strong',
         'css': 'style',
+        'csss': 'link:css',
         'css:src': 'link:css',
         'csssrc': 'link:css',
         'js': 'script',
+        'jss': 'script:src',
         'js:src': 'script:src',
         'jssrc': 'script:src',
         }
@@ -794,7 +817,6 @@ class Token:
         """Initializes. Only called if the token is an element token.
         [Private]
         """
-
 
         # Get the tag name. Default to DIV if none given.
         name = re.findall('^([\w\-:]*)', self.str)[0]
