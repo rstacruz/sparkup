@@ -2,7 +2,7 @@
 " Installation:
 "   Option 1:
 "     add sparkup's vim directory to vim's runtimepath (the location of the
-"     sparkup executable will be determine automatically):
+"     sparkup executable will be determined automatically):
 "       set rtp+=~/sparkup/vim
 "
 "   Option 2:
@@ -11,7 +11,7 @@
 "     2. add sparkup/sparkup to your system path.
 
 if !exists('g:sparkup')
-  let g:sparkup = 'sparkup'
+    let g:sparkup = 'sparkup'
 endif
 
 if !exists('g:sparkupArgs')
