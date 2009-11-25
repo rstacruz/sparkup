@@ -1,7 +1,14 @@
 " Sparkup
 " Installation:
-" add the sparkup's vim directory to vim's runtimepath:
-"   set rtp+=~/sparkup/vim
+"   Option 1:
+"     add sparkup's vim directory to vim's runtimepath (the location of the
+"     sparkup executable will be determine automatically):
+"       set rtp+=~/sparkup/vim
+"
+"   Option 2:
+"     1. copy the contents of sparkup/vim to your ~/.vim directory.
+"        $ cp -r sparkup/vim/* ~/.vim
+"     2. add sparkup/sparkup to your system path.
 
 if !exists('g:sparkup')
   let g:sparkup = 'sparkup'
