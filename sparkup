@@ -844,6 +844,13 @@ class Token:
         elif (name == ''): self.name = 'div'
         else: self.name = name
 
+        # Try looking for text
+        text = None
+        for text in re.findall('\{([^\}]*)\}', self.str):
+            self.str = self.str.replace("{" + text + "}", "")
+        if text is not None:
+            self.text = text
+
         # Get the class names
         classes = []
         for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
@@ -874,12 +881,6 @@ class Token:
                 try:    key, value = attrib.split('=', 1)
                 except: key, value = [attrib, '']
             self.attributes[key] = value
-
-        # Try looking for text
-        text = None
-        for text in re.findall('\{([^\}]*)\}', self.str): pass
-        if text is not None:
-            self.text = text
 
         # Populate flag (e.g., ul+)
         flags = None

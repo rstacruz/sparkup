@@ -91,6 +91,10 @@ class SparkupTest:
             'input': 'p#menu > table+ + ul',
             'output': '<p id="menu">\n    <table cellspacing="0">\n        <tr>\n            <td>$1</td>\n        </tr>\n    </table>\n    <ul>$2</ul>\n</p>$0'
             },
+        'Text with dot test': {
+            'input': 'p { text.com }',
+            'output': '<p> text.com </p>$0'
+            },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
     def run(self):
