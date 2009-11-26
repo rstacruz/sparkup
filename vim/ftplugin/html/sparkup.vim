@@ -9,37 +9,59 @@
 "     1. copy the contents of sparkup/vim to your ~/.vim directory.
 "        $ cp -r sparkup/vim/* ~/.vim
 "     2. add sparkup/sparkup to your system path.
+"
+" Configuration:
+"   g:sparkup (Default: 'sparkup') -
+"     Location of the sparkup executable. You shouldn't need to change this
+"     setting if you used either of the install options above.
+"   g:sparkupArgs (Default: '--no-last-newline') -
+"     Additional args passed to sparkup.
+"   g:sparkupExecuteMapping (Default: '<c-e>') -
+"     Mapping used to execute sparkup.
+"   g:sparkupNextMapping (Default: '<c-n>') -
+"     Mapping used to jump to the next empty tag/attribute.
 
-if !exists('g:sparkup')
-    let g:sparkup = 'sparkup'
+if !exists('g:sparkupExecuteMapping')
+  let g:sparkupExecuteMapping = '<c-e>'
 endif
 
-if !exists('g:sparkupArgs')
-    let g:sparkupArgs = '--no-last-newline'
+if !exists('g:sparkupNextMapping')
+  let g:sparkupNextMapping = '<c-n>'
 endif
 
-" check the user's path first. if not found then search relative to
-" sparkup.vim in the runtimepath.
-if !executable(g:sparkup)
-    let paths = substitute(escape(&runtimepath, ' '), '\(,\|$\)', '/**\1', 'g')
-    let g:sparkup = fnamemodify(findfile('sparkup.vim', paths), ':p:h:h:h:h') .  '/sparkup'
+exec 'nmap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
+exec 'imap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
+exec 'nmap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
+exec 'imap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
 
-    if !filereadable(g:sparkup)
-        echohl WarningMsg
-        echom 'Warning: could not find sparkup on your path or in your vim runtime path.'
-        echohl None
-        finish
+if exists('*s:Sparkup')
+    finish
+endif
+
+function! s:Sparkup()
+    if !exists('s:sparkup')
+        let s:sparkup = exists('g:sparkup') ? g:sparkup : 'sparkup'
+        let s:sparkupArgs = exists('g:sparkupArgs') ? g:sparkupArgs : '--no-last-newline'
+        " check the user's path first. if not found then search relative to
+        " sparkup.vim in the runtimepath.
+        if !executable(s:sparkup)
+            let paths = substitute(escape(&runtimepath, ' '), '\(,\|$\)', '/**\1', 'g')
+            let s:sparkup = fnamemodify(findfile('sparkup.vim', paths), ':p:h:h:h:h') .  '/sparkup'
+
+            if !filereadable(s:sparkup)
+                echohl WarningMsg
+                echom 'Warning: could not find sparkup on your path or in your vim runtime path.'
+                echohl None
+                finish
+            endif
+        endif
+        let s:sparkup .= printf(' %s --indent-spaces=%s', s:sparkupArgs, &shiftwidth)
     endif
-endif
+    exec '.!' . s:sparkup
+    call s:SparkupNext()
+endfunction
 
-let g:sparkup .= printf(' %s --indent-spaces=%s', g:sparkupArgs, &shiftwidth)
-
-nmap <c-e> :exec '.!' . g:sparkup<cr>:call SparkupNext()<cr>
-imap <c-e> <c-g>u<Esc>:exec '.!' . g:sparkup<Cr>:call SparkupNext()<cr>
-nmap <c-n> :call SparkupNext()<cr>
-imap <c-n> <c-g>u<Esc>:call SparkupNext()<cr>
-
-function! SparkupNext()
+function! s:SparkupNext()
     " 1: empty tag, 2: empty attribute, 3: empty line
     let n = search('><\/\|\(""\)\|^\s*$', 'Wp')
     if n == 3
