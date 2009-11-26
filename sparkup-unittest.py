@@ -95,6 +95,10 @@ class SparkupTest:
             'input': 'p { text.com }',
             'output': '<p> text.com </p>$0'
             },
+        'Attribute with dot test': {
+            'input': 'p [attrib=text.com]',
+            'output': '<p attrib="text.com">$1</p>$0'
+            },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
     def run(self):
