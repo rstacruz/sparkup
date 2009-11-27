@@ -5,7 +5,7 @@
 "     sparkup executable will be determined automatically):
 "       set rtp+=~/sparkup/vim
 "
-"   Option 2:
+"   Option 2 (Note: Windows users should stick to option 1 above):
 "     1. copy the contents of sparkup/vim to your ~/.vim directory.
 "        $ cp -r sparkup/vim/* ~/.vim
 "     2. add sparkup/sparkup to your system path.
@@ -55,7 +55,11 @@ function! s:Sparkup()
                 finish
             endif
         endif
+        let s:sparkup = '"' . s:sparkup . '"'
         let s:sparkup .= printf(' %s --indent-spaces=%s', s:sparkupArgs, &shiftwidth)
+        if has('win32') || has('win64')
+            let s:sparkup = 'python ' . s:sparkup
+        endif
     endif
     exec '.!' . s:sparkup
     call s:SparkupNext()
