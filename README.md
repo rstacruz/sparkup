@@ -38,6 +38,9 @@ This project is inspired by [Zen Coding](http://code.google.com/p/zen-coding/) o
 [Vadim Makeev](http://pepelsbey.net). The Zen HTML syntax is forward-compatible with Sparkup
 (anything that Zen HTML can parse, Sparkup can too).
 
+The following people have contributed code to the project:
+ - Guillermo O. Freschi (Tordek @ github)
+
 Examples
 --------
 
