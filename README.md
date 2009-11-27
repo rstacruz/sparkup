@@ -40,6 +40,7 @@ This project is inspired by [Zen Coding](http://code.google.com/p/zen-coding/) o
 
 The following people have contributed code to the project:
  - Guillermo O. Freschi (Tordek @ github)
+ - Eric Van Dewoestine (ervandew @ github)
 
 Examples
 --------

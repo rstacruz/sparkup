@@ -844,6 +844,24 @@ class Token:
         elif (name == ''): self.name = 'div'
         else: self.name = name
 
+        # Look for attributes
+        attribs = []
+        for attrib in re.findall('\[([^\]]*)\]', self.str):
+            attribs.append(attrib)
+            self.str = self.str.replace("[" + attrib + "]", "")
+        if len(attribs) > 0:
+            for attrib in attribs:
+                try:    key, value = attrib.split('=', 1)
+                except: key, value = [attrib, '']
+            self.attributes[key] = value
+
+        # Try looking for text
+        text = None
+        for text in re.findall('\{([^\}]*)\}', self.str):
+            self.str = self.str.replace("{" + text + "}", "")
+        if text is not None:
+            self.text = text
+
         # Get the class names
         classes = []
         for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
@@ -865,21 +883,6 @@ class Token:
         for multiplier in re.findall('\*\s*([0-9]+)', self.str): pass
         if multiplier is not None:
             self.multiplier = int(multiplier)
-
-        # Look for attributes
-        attribs = []
-        for attrib in re.findall('\[([^\]]*)\]', self.str): attribs.append(attrib)
-        if len(attribs) > 0:
-            for attrib in attribs:
-                try:    key, value = attrib.split('=', 1)
-                except: key, value = [attrib, '']
-            self.attributes[key] = value
-
-        # Try looking for text
-        text = None
-        for text in re.findall('\{([^\}]*)\}', self.str): pass
-        if text is not None:
-            self.text = text
 
         # Populate flag (e.g., ul+)
         flags = None
