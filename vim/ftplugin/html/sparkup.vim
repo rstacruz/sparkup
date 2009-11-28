@@ -1,23 +1,20 @@
 " Sparkup
 " Installation:
-"   Option 1:
-"     add sparkup's vim directory to vim's runtimepath (the location of the
-"     sparkup executable will be determined automatically):
-"       set rtp+=~/sparkup/vim
+"    Copy the contents of vim/ftplugin/ to your ~/.vim/ftplugin directory.
 "
-"   Option 2:
-"     1. copy the contents of sparkup/vim to your ~/.vim directory.
-"        $ cp -r sparkup/vim/* ~/.vim
-"     2. add sparkup/sparkup to your system path.
+"        $ mkdir -p ~/.vim/ftplugin && cp -R vim/ftplugin ~/.vim/ftplugin/
 "
 " Configuration:
 "   g:sparkup (Default: 'sparkup') -
 "     Location of the sparkup executable. You shouldn't need to change this
 "     setting if you used either of the install options above.
+"
 "   g:sparkupArgs (Default: '--no-last-newline') -
 "     Additional args passed to sparkup.
+"
 "   g:sparkupExecuteMapping (Default: '<c-e>') -
 "     Mapping used to execute sparkup.
+"
 "   g:sparkupNextMapping (Default: '<c-n>') -
 "     Mapping used to jump to the next empty tag/attribute.
 

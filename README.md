@@ -39,8 +39,12 @@ This project is inspired by [Zen Coding](http://code.google.com/p/zen-coding/) o
 (anything that Zen HTML can parse, Sparkup can too).
 
 The following people have contributed code to the project:
+
  - Guillermo O. Freschi (Tordek @ github)
+   Bugfixes to the parsing system
+
  - Eric Van Dewoestine (ervandew @ github)
+   Improvements to the VIM plugin
 
 Examples
 --------
