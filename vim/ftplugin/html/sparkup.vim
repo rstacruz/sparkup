@@ -1,7 +1,6 @@
 " Sparkup
 " Installation:
 "    Copy the contents of vim/ftplugin/ to your ~/.vim/ftplugin directory.
-"
 "        $ mkdir -p ~/.vim/ftplugin && cp -R vim/ftplugin ~/.vim/ftplugin/
 "
 " Configuration:
@@ -52,7 +51,11 @@ function! s:Sparkup()
                 finish
             endif
         endif
+        let s:sparkup = '"' . s:sparkup . '"'
         let s:sparkup .= printf(' %s --indent-spaces=%s', s:sparkupArgs, &shiftwidth)
+        if has('win32') || has('win64')
+            let s:sparkup = 'python ' . s:sparkup
+        endif
     endif
     exec '.!' . s:sparkup
     call s:SparkupNext()
