@@ -35,10 +35,10 @@ class SparkupTest:
             'input': 'div#id.class[style=color:blue]',
             'output': '<div style="color:blue" class="class" id="id">$1</div><!-- /#id -->$0'
             },
-        #'Multiple attributes test': {
-        #    'input': 'div[align=center][style=color:blue][rel=none]',
-        #    'output': '<div style="color:blue" class="class" id="id">$1</div><!-- /#id -->$0'
-        #    },
+        'Multiple attributes test': {
+            'input': 'div[align=center][style=color:blue][rel=none]',
+            'output': '<div align="center" style="color:blue" rel="none">$1</div>$0'
+            },
         'Multiple class test': {
             'input': 'div.c1.c2.c3',
             'output': '<div class="c1 c2 c3">$1</div><!-- /.c1.c2.c3 -->$0'
