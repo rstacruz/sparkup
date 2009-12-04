@@ -24,7 +24,7 @@ You may download Sparkup from Github. [Download the latest version here](http://
    HTML) type in something (e.g., `#header > h1`), then press `Ctrl` + `E`. Pressing `Tab`
    will cycle through empty elements.
 
- - **VIM**: See the `sparkup.vim` file's contents for details.
+ - **VIM**: See the `README.txt` file inside the vim directory for details.
 
  - **Others/command line use**: You may put `sparkup` in your `$PATH` somewhere. You may then
    invoke it by typing `echo "(input here)" | sparkup`, or `sparkup --help` for a list of commands.
@@ -37,6 +37,14 @@ Sparkup is written by Rico Sta. Cruz and is released under the MIT license.
 This project is inspired by [Zen Coding](http://code.google.com/p/zen-coding/) of
 [Vadim Makeev](http://pepelsbey.net). The Zen HTML syntax is forward-compatible with Sparkup
 (anything that Zen HTML can parse, Sparkup can too).
+
+The following people have contributed code to the project:
+
+ - Guillermo O. Freschi (Tordek @ github)
+   Bugfixes to the parsing system
+
+ - Eric Van Dewoestine (ervandew @ github)
+   Improvements to the VIM plugin
 
 Examples
 --------

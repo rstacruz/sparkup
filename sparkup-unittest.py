@@ -35,10 +35,10 @@ class SparkupTest:
             'input': 'div#id.class[style=color:blue]',
             'output': '<div style="color:blue" class="class" id="id">$1</div><!-- /#id -->$0'
             },
-        #'Multiple attributes test': {
-        #    'input': 'div[align=center][style=color:blue][rel=none]',
-        #    'output': '<div style="color:blue" class="class" id="id">$1</div><!-- /#id -->$0'
-        #    },
+        'Multiple attributes test': {
+            'input': 'div[align=center][style=color:blue][rel=none]',
+            'output': '<div align="center" style="color:blue" rel="none">$1</div>$0'
+            },
         'Multiple class test': {
             'input': 'div.c1.c2.c3',
             'output': '<div class="c1 c2 c3">$1</div><!-- /.c1.c2.c3 -->$0'
@@ -90,6 +90,14 @@ class SparkupTest:
         'Expand test': {
             'input': 'p#menu > table+ + ul',
             'output': '<p id="menu">\n    <table cellspacing="0">\n        <tr>\n            <td>$1</td>\n        </tr>\n    </table>\n    <ul>$2</ul>\n</p>$0'
+            },
+        'Text with dot test': {
+            'input': 'p { text.com }',
+            'output': '<p> text.com </p>$0'
+            },
+        'Attribute with dot test': {
+            'input': 'p [attrib=text.com]',
+            'output': '<p attrib="text.com">$1</p>$0'
             },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
