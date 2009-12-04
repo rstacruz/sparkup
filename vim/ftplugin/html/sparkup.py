@@ -852,8 +852,8 @@ class Token:
         if len(attribs) > 0:
             for attrib in attribs:
                 try:    key, value = attrib.split('=', 1)
-                except: key, value = [attrib, '']
-            self.attributes[key] = value
+                except: key, value = attrib, ''
+                self.attributes[key] = value
 
         # Try looking for text
         text = None
