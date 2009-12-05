@@ -21,6 +21,7 @@ generic-dist: generic
 
 all-dist:
 	zip -9r distribution/sparkup-${VERSION}.zip generic vim textmate README.md -x */sparkup-readme.txt
+	cp distribution/sparkup-${VERSION}.zip distribution/sparkup-latest.zip
 
 generic:
 	cat sparkup.py > generic/sparkup

@@ -17,14 +17,14 @@ A short screencast is available here:
 
 Usage and installation
 ----------------------
-You may download Sparkup from Github. [Download the latest version here](http://github.com/rstacruz/sparkup/archives/master).
+You may download Sparkup from Github. [Download the latest version here](http://github.com/rstacruz/sparkup/downloads).
 
  - **TextMate**: Simply double-click on the `Sparkup.tmbundle` package in Finder. This
    will install it automatically. In TextMate, open an HTML file (orset the document type to
    HTML) type in something (e.g., `#header > h1`), then press `Ctrl` + `E`. Pressing `Tab`
    will cycle through empty elements.
 
- - **VIM**: See the `sparkup.vim` file's contents for details.
+ - **VIM**: See the `vim/README.txt` file for details.
 
  - **Others/command line use**: You may put `sparkup` in your `$PATH` somewhere. You may then
    invoke it by typing `echo "(input here)" | sparkup`, or `sparkup --help` for a list of commands.
