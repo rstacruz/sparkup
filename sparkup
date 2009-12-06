@@ -937,8 +937,7 @@ def parse_args():
 def main():
     (options, _) = parse_args()
 
-    lines = [sys.stdin.read()]
-    lines = " ".join(lines)
+    lines = sys.stdin.read()
 
     parser = Parser(options, lines)
 
