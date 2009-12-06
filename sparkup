@@ -539,8 +539,7 @@ class Element:
         """
 
         output = ""
-        try:    spaces_count = int(self.parser.options.options['indent_spaces'])
-        except: spaces_count = 4
+        spaces_count = self.parser.options.indent_spaces
         spaces = ' ' * spaces_count
         indent = self.depth * spaces
         
