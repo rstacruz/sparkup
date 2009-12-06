@@ -823,8 +823,7 @@ class Token:
             name = synonyms[name]
 
         if ':' in name:
-            try:    spaces_count = int(self.parser.options.indent_spaces)
-            except: spaces_count = 4
+            spaces_count = self.parser.options.indent_spaces
             indent = ' ' * spaces_count
 
             shortcuts = self.parser.dialect.shortcuts
