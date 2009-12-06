@@ -917,19 +917,16 @@ def parse_args():
 
     optparser.add_option('--no-guides', action="store_true", help='Deprecated')
     optparser.add_option('--post-tag-guides', action="store_true",
-            dest="post-tag-guides", help='Adds comments at the end of DIV tags')
-    optparser.add_option('--textmate', action="store_true", dest='textmate',
+            help='Adds comments at the end of DIV tags')
+    optparser.add_option('--textmate', action="store_true",
             help='Adds snippet info (textmate mode)')
-    optparser.add_option('--indent-spaces', dest='indent_spaces',
-            help='Indent spaces')
+    optparser.add_option('--indent-spaces', help='Indent spaces')
     optparser.add_option('--expand-divs', action="store_true",
-            dest='expand_divs', help='Automatically expand divs')
+            help='Automatically expand divs')
     optparser.add_option('--no-last-newline', action="store_false",
-            dest='last_newline', help='Skip the trailing newline')
-    optparser.add_option('--start-guide-format', dest='start_guide_format',
-            help='To be documented')
-    optparser.add_option('--end-guide-format', dest='end_guide_format',
-            help='To be documented')
+            help='Skip the trailing newline')
+    optparser.add_option('--start-guide-format', help='To be documented')
+    optparser.add_option('--end-guide-format', help='To be documented')
 
     optparser.set_defaults(post_tag_guides=False, textmate=False,
             indent_spaces=4, expand_divs=False, last_newline=True,
