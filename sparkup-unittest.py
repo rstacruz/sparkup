@@ -105,18 +105,15 @@ class SparkupTest:
         """Run Forrest run!"""
 
         print "Test results:"
+        (options, _) = sparkup.parse_args()
+        options.textmate = True
+        options.post_tag_guides = True
+        options.last_newline = False
+
         for name, case in self.cases.iteritems():
-            try:    options_key = case['options']
-            except: options_key = 'default'
-
-            try:    options = self.options[options_key]
-            except: options = self.options['default']
-
             # Output buffer
-            r = sparkup.Router()
             input = case['input']
-            output = r.start(options=options, str=input, ret=True)
-            del r
+            output = sparkup.Parser(options, input).render()
 
             # Did it work?
             result = output == case['output']
