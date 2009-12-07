@@ -911,7 +911,10 @@ class Token:
 
 # =============================================================================== 
 def parse_args():
-    optparser = OptionParser(version=version)
+    optparser = OptionParser(version=version,
+            description="Expands input into HTML.",
+            epilog="Please refer to the manual for more information.")
+
 
     optparser.add_option('--no-guides', action="store_true", help='Deprecated')
     optparser.add_option('--post-tag-guides', action="store_true",
