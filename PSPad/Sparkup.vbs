@@ -1,6 +1,8 @@
 '****************************
 ' Author:        Danilo Bargen <gezuru@gmail.com>
 ' Requirements:  PSPad, sparkup, Windows Script (http://tinyurl.com/376nwk)
+' Changelog:     2009/11/25 Created script
+'                2009/12/8  Script now auto-selects text to be converted
 ' 
 ' CONFIGURATION
 ' Please set path to the sparkup python script
@@ -35,6 +37,9 @@ Sub Sparkup()
 	
 	' Assign active window
 	editor.assignActiveEditor()
+	
+	' Select from cursor to start of line
+	editor.command "ecSelLineStart"
 	
 	' Get selected text
 	strInput = editor.selText()
