@@ -824,9 +824,6 @@ class Token:
             name = synonyms[name]
 
         if ':' in name:
-            spaces_count = self.parser.options.indent_spaces
-            indent = ' ' * spaces_count
-
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
