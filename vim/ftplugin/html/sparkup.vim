@@ -18,8 +18,6 @@
 "   g:sparkupNextMapping (Default: '<c-n>') -
 "     Mapping used to jump to the next empty tag/attribute.
 
-set rtp+=~/.vim/ftplugin/html
-
 if !exists('g:sparkupExecuteMapping')
   let g:sparkupExecuteMapping = '<c-e>'
 endif
