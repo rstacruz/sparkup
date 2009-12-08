@@ -475,8 +475,8 @@ class Element:
     """An element.
     """
 
-    def __init__(self, token=None, parent=None, count=None, local_count=None, \
-                 parser=None, opening_tag=None, closing_tag=None, \
+    def __init__(self, token=None, parent=None, count=None, local_count=None,
+                 parser=None, opening_tag=None, closing_tag=None,
                  attributes=None, name=None, text=None):
         """Constructor.
 
