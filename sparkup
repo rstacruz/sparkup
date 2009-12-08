@@ -279,12 +279,12 @@ class Parser:
     # Constructor
     # -------------------------------------------------------------------------
 
-    def __init__(self, options, str, dialect=HtmlDialect()):
+    def __init__(self, options, string, dialect=HtmlDialect()):
         """Constructor.
         """
 
         self.tokens = []
-        self.str = str
+        self.string = string
         self.options = options
         self.dialect = dialect
         self.root = Element(parser=self)
@@ -308,7 +308,7 @@ class Parser:
         output = self.root.render()
 
         # Indent by whatever the input is indented with
-        indent = re.findall("^[\r\n]*(\s*)", self.str)[0]
+        indent = re.findall("^[\r\n]*(\s*)", self.string)[0]
         output = indent + output.replace("\n", "\n" + indent)
 
         # Strip newline if not needed
@@ -352,25 +352,25 @@ class Parser:
         Initializes [[self.tokens]].
         """
 
-        str = self.str.strip()
+        string = self.string.strip()
 
         # Find prefix/suffix
         while True:
-            match = re.match(r"^(\s*<[^>]+>\s*)", str)
+            match = re.match(r"^(\s*<[^>]+>\s*)", string)
             if match is None: break
             if self.prefix is None: self.prefix = ''
             self.prefix += match.group(0)
-            str = str[len(match.group(0)):]
+            string = string[len(match.group(0)):]
 
         while True:
-            match = re.findall(r"(\s*<[^>]+>[\s\n\r]*)$", str)
+            match = re.findall(r"(\s*<[^>]+>[\s\n\r]*)$", string)
             if not match: break
             if self.suffix is None: self.suffix = ''
             self.suffix = match[0] + self.suffix
-            str = str[:-len(match[0])]
+            string = string[:-len(match[0])]
 
         # Split by the element separators
-        for token in re.split('(<|>|\+(?!\\s*\+|$))', str):
+        for token in re.split('(<|>|\+(?!\\s*\+|$))', string):
             if token.strip() != '':
                 self.tokens.append(Token(token, parser=self))
 
@@ -427,9 +427,9 @@ class Parser:
     # The dialect of XML
     dialect = None
 
-    # Property: str
+    # Property: string
     # The string
-    str = ''
+    string = ''
 
     # Property: tokens
     # The list of tokens
@@ -549,11 +549,11 @@ class Element:
         # Make the guide from the ID (/#header), or the class if there's no
         # ID (/.item)
         # This is for the start-guide, end-guide and post_tag_guides
-        guide_str = ''
+        guide_string = ''
         if 'id' in self.attributes:
-            guide_str += "#%s" % self.attributes['id']
+            guide_string += "#%s" % self.attributes['id']
         elif 'class' in self.attributes:
-            guide_str += ".%s" % self.attributes['class'].replace(' ', '.')
+            guide_string += ".%s" % self.attributes['class'].replace(' ', '.')
 
         # Build the post-tag guide (e.g., </div><!-- /#header -->),
         # the start guide, and the end guide.
@@ -564,18 +564,18 @@ class Element:
             (('id' in self.attributes) or ('class' in self.attributes))):
 
             if (self.parser.options.post_tag_guides):
-                guide = "<!-- /%s -->" % guide_str
+                guide = "<!-- /%s -->" % guide_string
 
             if (self.parser.options.start_guide_format):
                 format = self.parser.options.start_guide_format
-                try: start_guide = format % guide_str
-                except: start_guide = (format + " " + guide_str).strip()
+                try: start_guide = format % guide_string
+                except: start_guide = (format + " " + guide_string).strip()
                 start_guide = "%s<!-- %s -->\n" % (indent, start_guide)
 
             if (self.parser.options.end_guide_format):
                 format = self.parser.options.end_guide_format
-                try: end_guide = format % guide_str
-                except: end_guide = (format + " " + guide_str).strip()
+                try: end_guide = format % guide_string
+                except: end_guide = (format + " " + guide_string).strip()
                 end_guide = "\n%s<!-- %s -->" % (indent, end_guide)
 
         # Short, self-closing tags (<br />)
@@ -783,27 +783,27 @@ class Element:
 # =============================================================================
 
 class Token:
-    def __init__(self, str, parser=None):
+    def __init__(self, string, parser=None):
         """Token.
 
         Description:
-        str   - The string to parse
+        string   - The string to parse
 
         In the string `div > ul`, there are 3 tokens. (`div`, `>`, and `ul`)
 
         For `>`, it will be a `Token` with `type` set to `Token.CHILD`
         """
 
-        self.str = str.strip()
+        self.string = string.strip()
         self.attributes = {}
         self.parser = parser
 
         # Set the type.
-        if self.str == '<':
+        if self.string == '<':
             self.type = Token.PARENT
-        elif self.str == '>':
+        elif self.string == '>':
             self.type = Token.CHILD
-        elif self.str == '+':
+        elif self.string == '+':
             self.type = Token.SIBLING
         else:
             self.type = Token.ELEMENT
@@ -815,7 +815,7 @@ class Token:
         """
 
         # Get the tag name. Default to DIV if none given.
-        name = re.findall('^([\w\-:]*)', self.str)[0]
+        name = re.findall('^([\w\-:]*)', self.string)[0]
         name = name.lower().replace('-', ':')
 
         # Find synonyms through this thesaurus
@@ -838,9 +838,9 @@ class Token:
 
         # Look for attributes
         attribs = []
-        for attrib in re.findall('\[([^\]]*)\]', self.str):
+        for attrib in re.findall('\[([^\]]*)\]', self.string):
             attribs.append(attrib)
-            self.str = self.str.replace("[" + attrib + "]", "")
+            self.string = self.string.replace("[" + attrib + "]", "")
         if len(attribs) > 0:
             for attrib in attribs:
                 try:    key, value = attrib.split('=', 1)
@@ -849,14 +849,14 @@ class Token:
 
         # Try looking for text
         text = None
-        for text in re.findall('\{([^\}]*)\}', self.str):
-            self.str = self.str.replace("{" + text + "}", "")
+        for text in re.findall('\{([^\}]*)\}', self.string):
+            self.string = self.string.replace("{" + text + "}", "")
         if text is not None:
             self.text = text
 
         # Get the class names
         classes = []
-        for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
+        for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.string):
             classes.append(classname)
         if len(classes) > 0:
             try:    self.attributes['class']
@@ -866,27 +866,27 @@ class Token:
 
         # Get the ID
         id = None
-        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.str): pass
+        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.string): pass
         if id is not None:
             self.attributes['id'] = id
 
         # See if there's a multiplier (e.g., "li*3")
         multiplier = None
-        for multiplier in re.findall('\*\s*([0-9]+)', self.str): pass
+        for multiplier in re.findall('\*\s*([0-9]+)', self.string): pass
         if multiplier is not None:
             self.multiplier = int(multiplier)
 
         # Populate flag (e.g., ul+)
         flags = None
-        for flags in re.findall('[\+\!]+$', self.str): pass
+        for flags in re.findall('[\+\!]+$', self.string): pass
         if flags is not None:
             if '+' in flags: self.populate = True
             if '!' in flags: self.expand = True
 
     def __str__(self):
-        return self.str 
+        return self.string 
 
-    str = ''
+    string = ''
     parser = None
 
     # For elements
