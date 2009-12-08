@@ -9,7 +9,7 @@ from optparse import OptionParser
 
 VERSION = "0.1.3"
 
-# =============================================================================== 
+# =============================================================================
 
 class Dialect:
     shortcuts = {}
@@ -279,7 +279,7 @@ class Parser:
     """
 
     # Constructor
-    # --------------------------------------------------------------------------- 
+    # -------------------------------------------------------------------------
 
     def __init__(self, options, str, dialect=HtmlDialect()):
         """Constructor.
@@ -299,7 +299,7 @@ class Parser:
 
 
     # Methods 
-    # --------------------------------------------------------------------------- 
+    # -------------------------------------------------------------------------
 
     def render(self):
         """Renders.
@@ -325,7 +325,7 @@ class Parser:
         return output
 
     # Protected methods 
-    # --------------------------------------------------------------------------- 
+    # -------------------------------------------------------------------------
 
     def _textmatify(self, output):
         """Returns a version of the output with TextMate placeholders in it.
@@ -423,7 +423,7 @@ class Parser:
         return
 
     # Properties
-    # --------------------------------------------------------------------------- 
+    # -------------------------------------------------------------------------
 
     # Property: dialect
     # The dialect of XML
@@ -469,7 +469,7 @@ class Parser:
     suffix = ''
     pass
 
-# =============================================================================== 
+# =============================================================================
 
 class Element:
     """An element.
@@ -487,8 +487,8 @@ class Element:
 
         token       - (Token) The token (required)
         parent      - (Element) Parent element; `None` if root
-        count       - (Int) The number to substitute for `&` (e.g., in `li.item-$`)
-        local_count - (Int) The number to substitute for `$` (e.g., in `li.item-&`)
+        count       - (Int) The number to substitute for `&` (e.g., in `li.item-&`)
+        local_count - (Int) The number to substitute for `$` (e.g., in `li.item-$`)
         parser      - (Parser) The parser
 
         attributes  - ...
@@ -548,7 +548,8 @@ class Element:
         if self.prefix: prefix = self.prefix + "\n"
         if self.suffix: suffix = self.suffix
 
-        # Make the guide from the ID (/#header), or the class if there's no ID (/.item)
+        # Make the guide from the ID (/#header), or the class if there's no
+        # ID (/.item)
         # This is for the start-guide, end-guide and post_tag_guides
         guide_str = ''
         if 'id' in self.attributes:
@@ -679,7 +680,8 @@ class Element:
         self.children.append(object)
 
     def get_last_child(self):
-        """Returns the last child element which was [[append()]]ed to this element.
+        """Returns the last child element which was [[append()]]ed
+        to this element.
 
         Usage:
             element.get_last_child()
@@ -736,13 +738,13 @@ class Element:
                     if attrib not in self.attributes:
                         self.attributes[attrib] = attribs[attrib]
 
-    # ---------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     # Property: last_child
     # [Read-only]
     last_child = property(get_last_child)
 
-    # ---------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     # Property: parent
     # (Element) The parent element.
@@ -780,7 +782,7 @@ class Element:
     prefix = None
     suffix = None
 
-# =============================================================================== 
+# =============================================================================
 
 class Token:
     def __init__(self, str, parser=None):
@@ -910,7 +912,7 @@ class Token:
     PARENT = 8
     SIBLING = 16
 
-# =============================================================================== 
+# =============================================================================
 
 def parse_args():
     optparser = OptionParser(version=VERSION,
