@@ -465,7 +465,6 @@ class Parser:
     # Property: suffix
     # (string) The trailing tag at the end.
     suffix = ''
-    pass
 
 # =============================================================================
 
@@ -626,10 +625,6 @@ class Element:
                  self.text, \
                  self.get_closing_tag(), \
                  guide, end_guide, "\n")
-
-        # Else, it's an empty-named element (like the root). Pass.
-        else: pass
-
 
         return output
 
@@ -865,23 +860,22 @@ class Token:
             self.attributes['class'] = self.attributes['class'].strip()
 
         # Get the ID
-        id = None
-        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.string): pass
-        if id is not None:
-            self.attributes['id'] = id
+        id_match = re.search(r'#([\$a-zA-Z0-9_\-\&]+)', self.string)
+        if id_match is not None:
+            self.attributes['id'] = id_match.group(1)
 
         # See if there's a multiplier (e.g., "li*3")
-        multiplier = None
-        for multiplier in re.findall('\*\s*([0-9]+)', self.string): pass
-        if multiplier is not None:
-            self.multiplier = int(multiplier)
+        multiplier_match = re.search(r'\*\s*([0-9]+)', self.string)
+        if multiplier_match is not None:
+            self.multiplier = int(multiplier_match.group(1))
 
         # Populate flag (e.g., ul+)
-        flags = None
-        for flags in re.findall('[\+\!]+$', self.string): pass
-        if flags is not None:
-            if '+' in flags: self.populate = True
-            if '!' in flags: self.expand = True
+        flags_match = re.search(r'[\+\!]+$', self.string)
+        if flags_match is not None:
+            if '+' in flags_match.group(0):
+                self.populate = True
+            if '!' in flags_match.group(0):
+                self.expand = True
 
     def __str__(self):
         return self.string
