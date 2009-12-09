@@ -396,10 +396,8 @@ class Parser:
                 # multiplied by how many carets we have
                 count = 0
                 for caret in self.caret:
-                    local_count = 0
-                    for i in range(token.multiplier):
+                    for local_count in range(1, token.multiplier + 1):
                         count += 1
-                        local_count += 1
                         new = Element(token, caret,
                                 count = count,
                                 local_count = local_count,
@@ -418,7 +416,6 @@ class Parser:
                 parent = self.caret[0].parent
                 if parent is not None:
                     self.caret[:] = [parent]
-        return
 
     # Properties
     # -------------------------------------------------------------------------
