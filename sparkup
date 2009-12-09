@@ -36,7 +36,7 @@ class HtmlDialect(Dialect):
                 '<html lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -49,7 +49,7 @@ class HtmlDialect(Dialect):
                 '<html lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -62,7 +62,7 @@ class HtmlDialect(Dialect):
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -75,7 +75,7 @@ class HtmlDialect(Dialect):
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -88,7 +88,7 @@ class HtmlDialect(Dialect):
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -101,7 +101,7 @@ class HtmlDialect(Dialect):
                 '<html lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta charset="UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -296,7 +296,7 @@ class Parser:
         self._parse()
 
 
-    # Methods 
+    # Methods
     # -------------------------------------------------------------------------
 
     def render(self):
@@ -322,7 +322,7 @@ class Parser:
 
         return output
 
-    # Protected methods 
+    # Protected methods
     # -------------------------------------------------------------------------
 
     def _textmatify(self, output):
@@ -441,7 +441,7 @@ class Parser:
 
     # Property: root
     # The root [[Element]] node.
-    root = None 
+    root = None
 
     # Property: caret
     # The current insertion point.
@@ -541,7 +541,7 @@ class Element:
         spaces_count = self.parser.options.indent_spaces
         spaces = ' ' * spaces_count
         indent = self.depth * spaces
-        
+
         prefix, suffix = ('', '')
         if self.prefix: prefix = self.prefix + "\n"
         if self.suffix: suffix = self.suffix
@@ -611,10 +611,10 @@ class Element:
                          output + \
                          indent + self.get_closing_tag() + \
                          guide + end_guide + "\n"
-            
+
 
         # Short, self-closing tags (<br />)
-        elif self.name in short_tags: 
+        elif self.name in short_tags:
             output = "%s<%s />\n" % (indent, self.get_default_tag())
 
         # Tags with text, possibly
@@ -808,7 +808,7 @@ class Token:
         else:
             self.type = Token.ELEMENT
             self._init_element()
-        
+
     def _init_element(self):
         """Initializes. Only called if the token is an element token.
         [Private]
@@ -884,7 +884,7 @@ class Token:
             if '!' in flags: self.expand = True
 
     def __str__(self):
-        return self.string 
+        return self.string
 
     string = ''
     parser = None
@@ -902,7 +902,7 @@ class Token:
 
     # Type
     type = 0
-    ELEMENT = 2 
+    ELEMENT = 2
     CHILD = 4
     PARENT = 8
     SIBLING = 16
