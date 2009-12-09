@@ -245,7 +245,7 @@ class HtmlDialect(Dialect):
         'jssrc': 'script:src',
         }
     short_tags = (
-        'area', 'base', 'basefont', 'br', 'embed', 'hr', \
+        'area', 'base', 'basefont', 'br', 'embed', 'hr',
         'input', 'img', 'link', 'param', 'meta')
     required = {
         'a':      {'href':''},
@@ -308,7 +308,7 @@ class Parser:
         output = self.root.render()
 
         # Indent by whatever the input is indented with
-        indent = re.findall("^[\r\n]*(\s*)", self.string)[0]
+        indent = re.findall(r"^[\r\n]*(\s*)", self.string)[0]
         output = indent + output.replace("\n", "\n" + indent)
 
         # Strip newline if not needed
@@ -810,7 +810,7 @@ class Token:
         """
 
         # Get the tag name. Default to DIV if none given.
-        name = re.findall('^([\w\-:]*)', self.string)[0]
+        name = re.findall(r'^([\w\-:]*)', self.string)[0]
         name = name.lower().replace('-', ':')
 
         # Find synonyms through this thesaurus
@@ -833,7 +833,7 @@ class Token:
 
         # Look for attributes
         attribs = []
-        for attrib in re.findall('\[([^\]]*)\]', self.string):
+        for attrib in re.findall(r'\[([^\]]*)\]', self.string):
             attribs.append(attrib)
             self.string = self.string.replace("[" + attrib + "]", "")
         if len(attribs) > 0:
@@ -844,14 +844,14 @@ class Token:
 
         # Try looking for text
         text = None
-        for text in re.findall('\{([^\}]*)\}', self.string):
+        for text in re.findall(r'\{([^\}]*)\}', self.string):
             self.string = self.string.replace("{" + text + "}", "")
         if text is not None:
             self.text = text
 
         # Get the class names
         classes = []
-        for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.string):
+        for classname in re.findall(r'\.([\$a-zA-Z0-9_\-\&]+)', self.string):
             classes.append(classname)
         if len(classes) > 0:
             try:    self.attributes['class']
