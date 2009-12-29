@@ -29,7 +29,7 @@ all: ${FINAL_ZIP}
 # Final .zip
 ${FINAL_ZIP}: distrib
 	cd ${DISTRIB_PATH} && zip -9r "../$@" ${DISTRIB_FILES:${DISTRIB_PATH}/%=%} \
- 	  --exclude .DS_Store --exclude Thumbs.db --exclude *.pyc
+ 	  --exclude */.DS_Store --exclude */Thumbs.db --exclude */*.pyc
 
 # Distribution path
 distrib: ${DISTRIB_PATH} ${DISTRIB_FILES}
