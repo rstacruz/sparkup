@@ -7,8 +7,9 @@ ROOT      := $(PWD)
 
 # Paths
 PLUGINS_PATH      = plugins
+DOC_PATH          = docs
 DISTRIB_PATH      = sparkup-${VERSION}
-DISTRIB_PLUGINS   = ${DISTRIB_PATH}/textmate ${DISTRIB_PATH}/vim ${DISTRIB_PATH}/generic 
+DISTRIB_PLUGINS   = ${DISTRIB_PATH}/textmate ${DISTRIB_PATH}/vim ${DISTRIB_PATH}/generic  ${DISTRIB_PATH}/docs
 DISTRIB_FILES     = ${DISTRIB_PLUGINS} ${DISTRIB_PATH}/readme.txt
 
 # Files
@@ -64,6 +65,9 @@ ${DISTRIB_PATH}/generic: ${SPARKUP_PY}
 	cp -R "${PLUGINS_PATH}/generic" "${DISTRIB_PATH}"
 	cat ${SPARKUP_PY} > "$@/sparkup"
 	chmod +x "$@/sparkup"
+
+${DISTRIB_PATH}/docs:
+	cp -R docs "$@"
 
 # Sources
 ${SPARKUP_PY}:
