@@ -1,1 +1,123 @@
-More to come here.
+<h2>Usage and installation</h2>
+
+<ul>
+<li><p><strong>VIM, TextMate</strong>: See the <code>vim/</code> and <code>textmate/</code> folders</li>
+<li><p><strong>Others/command line use</strong>: See <code>generic/</code></li>
+
+</ul>
+
+
+<h2>Examples</h2>
+
+<p><strong><code>div</code></strong> expands to:</p>
+
+<pre><code>&lt;div&gt;&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>div#header</code></strong> expands to:</p>
+
+<pre><code>&lt;div id="header"&gt;&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>div.align-left#header</code></strong> expands to:</p>
+
+<pre><code>&lt;div id="header" class="align-left"&gt;&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>div#header + div#footer</code></strong> expands to:</p>
+
+<pre><code>&lt;div id="header"&gt;&lt;/div&gt;
+&lt;div id="footer"&gt;&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>#menu &gt; ul</code></strong> expands to:</p>
+
+<pre><code>&lt;div id="menu"&gt;
+
+    &lt;ul&gt;&lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>#menu &gt; h3 + ul</code></strong> expands to:</p>
+
+<pre><code>&lt;div id="menu"&gt;
+
+    &lt;h3&gt;&lt;/h3&gt;
+    &lt;ul&gt;&lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>#header &gt; h1{Welcome to our site}</code></strong> expands to:</p>
+
+<pre><code>&lt;div id="header"&gt;
+    &lt;h1&gt;Welcome to our site&lt;/h1&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p><strong><code>a[href=index.html]{Home}</code></strong> expands to:</p>
+
+<pre><code>&lt;a href="index.html"&gt;Home&lt;/a&gt;
+</code></pre>
+
+<p><strong><code>ul &gt; li*3</code></strong> expands to:</p>
+
+<pre><code>&lt;ul&gt;
+    &lt;li&gt;&lt;/li&gt;
+
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p><strong><code>ul &gt; li.item-$*3</code></strong> expands to:</p>
+
+<pre><code>&lt;ul&gt;
+    &lt;li class="item-1"&gt;&lt;/li&gt;
+    &lt;li class="item-2"&gt;&lt;/li&gt;
+    &lt;li class="item-3"&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</code></pre>
+
+<p><strong><code>ul &gt; li.item-$*3 &gt; strong</code></strong> expands to:</p>
+
+<pre><code>&lt;ul&gt;
+    &lt;li class="item-1"&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/li&gt;
+
+    &lt;li class="item-2"&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/li&gt;
+    &lt;li class="item-3"&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p><strong><code>table &gt; tr*2 &gt; td.name + td*3</code></strong> expands to:</p>
+
+<pre><code>&lt;table&gt;
+    &lt;tr&gt;
+        &lt;td class="name"&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+
+        &lt;td&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="name"&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</code></pre>
+
+<p><strong><code>#header &gt; ul &gt; li &lt; p{Footer}</code></strong> expands to:</p>
+
+<pre><code>&lt;!-- The &lt; symbol goes back up the parent; i.e., the opposite of &gt;. --&gt;
+&lt;div id="header"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;Footer&lt;/p&gt;
+&lt;/div&gt;
+</code>
+
