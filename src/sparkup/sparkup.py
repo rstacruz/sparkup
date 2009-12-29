@@ -5,7 +5,7 @@ import sys
 import re
 from optparse import OptionParser
 
-VERSION = "0.1.3"
+VERSION = "0.1.99"
 
 # =============================================================================
 
