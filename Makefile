@@ -1,39 +1,66 @@
-SPARKUP_PY=sparkup
-VERSION=`date '+%Y%m%d'`
-README=README.md
+# Sparkup makefile
+#
+VERSION    = $(shell cat VERSION)
+ROOT      := $(PWD)
 
-.PHONY: all textmate vim textmate-dist vim-dist plugins plugins-pre generic all-dist
-all: plugins
+# Paths
+PLUGINS_PATH      = plugins
+DISTRIB_PATH      = sparkup-${VERSION}
+DISTRIB_PLUGINS   = ${DISTRIB_PATH}/textmate ${DISTRIB_PATH}/vim ${DISTRIB_PATH}/generic 
+DISTRIB_FILES     = ${DISTRIB_PLUGINS} ${DISTRIB_PATH}/readme.txt
 
-plugins-pre:
-	mkdir -p distribution
+# Files
+README      = README.md
+SPARKUP_PY  = src/sparkup/sparkup.py
+FINAL_ZIP   = sparkup-${VERSION}.zip
 
-plugins: plugins-pre all-dist
+.PHONY: all distrib ${DISTRIB_PATH} ${DISTRIB_PLUGINS}
+all: ${FINAL_ZIP}
+	@echo ------
+	@echo  
+	@echo Done!
+	@echo  
+	@echo . - ${FINAL_ZIP}
+	@echo .   This is the redistributable ZIP file.
+	@echo .
+	@echo . - ${DISTRIB_PATH}/
+	@echo .   The plugins are here, ready-to-use.
 
-textmate-dist: textmate
-	cd TextMate && zip -9r ../distribution/sparkup-textmate-${VERSION}.zip . && cd ..
+# Final .zip
+${FINAL_ZIP}: distrib
+	cd ${DISTRIB_PATH} && zip -9r "../$@" ${DISTRIB_FILES:${DISTRIB_PATH}/%=%} \
+ 	  --exclude .DS_Store --exclude Thumbs.db --exclude *.pyc
 
-vim-dist: vim
-	cd vim && zip -9r ../distribution/sparkup-vim-${VERSION}.zip . && cd ..
+# Distribution path
+distrib: ${DISTRIB_PATH} ${DISTRIB_FILES}
 
-generic-dist: generic
-	cd generic && zip -9r ../distribution/sparkup-generic-${VERSION}.zip . && cd ..
+${DISTRIB_PATH}:
+	mkdir -p "$@"
 
-all-dist:
-	zip -9r distribution/sparkup-${VERSION}.zip generic vim textmate README.md -x */sparkup-readme.txt
-	cp distribution/sparkup-${VERSION}.zip distribution/sparkup-latest.zip
+${DISTRIB_PATH}/readme.txt: ${README}
+	cp ${README} "$@"
 
-generic:
-	cat sparkup.py > generic/sparkup
-	chmod +x generic/sparkup
-	#cp ${README} generic/sparkup-readme.txt
+${DISTRIB_PATH}/textmate: ${SPARKUP_PY}
+	mkdir -p "$@"
+	cp -R "${PLUGINS_PATH}/textmate" "${DISTRIB_PATH}"
+	mkdir -p "$@/Sparkup.tmbundle"
+	mkdir -p "$@/Sparkup.tmbundle/Support"
+	cp ${SPARKUP_PY} \
+	   "$@/Sparkup.tmbundle/Support/sparkup.py"
 
-textmate:
-	mkdir -p TextMate/Sparkup.tmbundle/Support
-	cp ${SPARKUP_PY} TextMate/Sparkup.tmbundle/Support/sparkup.py
-	#cp ${README} TextMate/sparkup-readme.txt
+${DISTRIB_PATH}/vim: ${SPARKUP_PY}
+	mkdir -p "$@"
+	cp -R "${PLUGINS_PATH}/vim" "${DISTRIB_PATH}"
+	mkdir -p "$@/ftplugin/html"
+	cp ${SPARKUP_PY} "$@/ftplugin/html/sparkup.py"
 
-vim:
-	mkdir -p vim/ftplugin/html
-	cp ${SPARKUP_PY} vim/ftplugin/html/sparkup.py
-	#cp ${README} vim/sparkup-readme.txt
+${DISTRIB_PATH}/generic: ${SPARKUP_PY}
+	mkdir -p "$@"
+	cp -R "${PLUGINS_PATH}/generic" "${DISTRIB_PATH}"
+	cat ${SPARKUP_PY} > "$@/sparkup"
+	chmod +x "$@/sparkup"
+
+# Sources
+${SPARKUP_PY}:
+	# Nothing to do
+

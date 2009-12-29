@@ -1,14 +1,11 @@
 .DS_Store
 .project
 doc
-distribution/
+sparkup-*/
+*.zip
 .sourcescribe_index
 *.swp
 *.swo
 *.pyc
 cscope.out
 *~
-
-# Distribution files
-# */sparkup
-# */sparkup.py

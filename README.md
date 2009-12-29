@@ -15,6 +15,12 @@ and TextMate are currently included.
 A short screencast is available here: 
 [http://www.youtube.com/watch?v=Jw3jipcenKc](http://www.youtube.com/watch?v=Jw3jipcenKc)
 
+Build instructions
+------------------
+
+The files in the source tree are not useable straight away: you need to build the plugins
+first. Simple type `make` (assuming you have GNU make installed) in the project's root.
+
 Usage and installation
 ----------------------
 You may download Sparkup from Github. [Download the latest version here](http://github.com/rstacruz/sparkup/downloads).
