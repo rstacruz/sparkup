@@ -21,6 +21,13 @@ Build instructions
 The files in the source tree are not useable straight away: you need to build the plugins
 first. Simple type `make` (assuming you have GNU make installed) in the project's root.
 
+What it will do:
+
+ - Create a directory called `sparkup-<version>/`
+ - Put the packaged, ready-to-use plugins there
+ - Inject the version number (from the file `VERSION`) to the copies of sparkup.py in that directory
+ - Create a redistributable ZIP file (s`parkup-<version>.zip`)
+
 Usage and installation
 ----------------------
 You may download Sparkup from Github. [Download the latest version here](http://github.com/rstacruz/sparkup/downloads).

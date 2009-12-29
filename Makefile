@@ -1,6 +1,8 @@
 # Sparkup makefile
-#
-VERSION    = $(shell cat VERSION)
+# ================
+
+# Account for incremental version numbers (e.g., 0.3.5-20091229)
+VERSION    = $(subst {date},${shell date +%Y%m%d},$(shell cat VERSION))
 ROOT      := $(PWD)
 
 # Paths
@@ -11,10 +13,10 @@ DISTRIB_FILES     = ${DISTRIB_PLUGINS} ${DISTRIB_PATH}/readme.txt
 
 # Files
 README      = README.md
-SPARKUP_PY  = src/sparkup/sparkup.py
+SPARKUP_PY  = ${DISTRIB_PATH}/sparkup.py
 FINAL_ZIP   = sparkup-${VERSION}.zip
 
-.PHONY: all distrib ${DISTRIB_PATH} ${DISTRIB_PLUGINS}
+.PHONY: all distrib ${DISTRIB_PATH} ${DISTRIB_PLUGINS} distrib_cleanup ${SPARKUP_PY}
 all: ${FINAL_ZIP}
 	@echo ------
 	@echo  
@@ -32,7 +34,10 @@ ${FINAL_ZIP}: distrib
  	  --exclude */.DS_Store --exclude */Thumbs.db --exclude */*.pyc
 
 # Distribution path
-distrib: ${DISTRIB_PATH} ${DISTRIB_FILES}
+distrib: ${DISTRIB_PATH} ${DISTRIB_FILES} distrib_cleanup
+
+distrib_cleanup:
+	rm ${SPARKUP_PY}
 
 ${DISTRIB_PATH}:
 	mkdir -p "$@"
@@ -62,5 +67,5 @@ ${DISTRIB_PATH}/generic: ${SPARKUP_PY}
 
 # Sources
 ${SPARKUP_PY}:
-	# Nothing to do
+	cat "src/sparkup/sparkup.py" | sed 's/^VERSION.*$$/VERSION = "${VERSION}"/' > $@
 

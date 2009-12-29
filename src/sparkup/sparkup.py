@@ -5,7 +5,7 @@ import sys
 import re
 from optparse import OptionParser
 
-VERSION = "0.1.99"
+VERSION = "000" # This line will be replaced in the make process.
 
 # =============================================================================
 
