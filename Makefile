@@ -17,7 +17,7 @@ README      = README.md
 SPARKUP_PY  = ${DISTRIB_PATH}/sparkup.py
 FINAL_ZIP   = sparkup-${VERSION}.zip
 
-.PHONY: all distrib ${DISTRIB_PATH} ${DISTRIB_PLUGINS} distrib_cleanup ${SPARKUP_PY}
+.PHONY: all distrib ${DISTRIB_PATH} ${DISTRIB_PLUGINS} distrib_cleanup ${SPARKUP_PY} ${DOC_PATH}
 all: ${FINAL_ZIP}
 	@echo ------
 	@echo  
@@ -66,8 +66,12 @@ ${DISTRIB_PATH}/generic: ${SPARKUP_PY}
 	cat ${SPARKUP_PY} > "$@/sparkup"
 	chmod +x "$@/sparkup"
 
-${DISTRIB_PATH}/docs:
-	cp -R docs "$@"
+${DISTRIB_PATH}/docs: ${DOC_PATH}
+	rm -f "$@"
+	cp -R ${DOC_PATH} "$@"
+
+${DOC_PATH}:
+	ss
 
 # Sources
 ${SPARKUP_PY}:
