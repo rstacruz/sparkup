@@ -533,8 +533,9 @@ class Element:
         [Grouped under "Rendering methods"]
         """
 
+        options = self.parser.options
         output = ""
-        spaces_count = self.parser.options.indent_spaces
+        spaces_count = options.indent_spaces
         spaces = ' ' * spaces_count
         indent = self.depth * spaces
 
@@ -556,23 +557,28 @@ class Element:
         guide = ''
         start_guide = ''
         end_guide = ''
+
         if ((self.name == 'div') and \
             (('id' in self.attributes) or ('class' in self.attributes))):
 
-            if (self.parser.options.post_tag_guides):
+            if (options.post_tag_guides):
                 guide = "<!-- /%s -->" % guide_string
 
-            if (self.parser.options.start_guide_format):
-                format = self.parser.options.start_guide_format
+            if (options.start_guide_format):
+                format = options.start_guide_format
                 try: start_guide = format % guide_string
                 except: start_guide = (format + " " + guide_string).strip()
                 start_guide = "%s<!-- %s -->\n" % (indent, start_guide)
 
-            if (self.parser.options.end_guide_format):
-                format = self.parser.options.end_guide_format
+            if (options.end_guide_format):
+                format = options.end_guide_format
                 try: end_guide = format % guide_string
                 except: end_guide = (format + " " + guide_string).strip()
-                end_guide = "\n%s<!-- %s -->" % (indent, end_guide)
+
+                if options.end_guide_newline:
+                    end_guide = "\n%s<!-- %s -->" % (indent, end_guide)
+                else:
+                    end_guide = "<!-- %s -->" % (end_guide)
 
         # Short, self-closing tags (<br />)
         short_tags = self.parser.dialect.short_tags
@@ -918,12 +924,17 @@ def parse_args():
             help='Skip the trailing newline')
     optparser.add_option('--start-guide-format', help='To be documented')
     optparser.add_option('--end-guide-format', help='To be documented')
+    optparser.add_option('--end-guide-newline', help='To be documented')
 
     optparser.set_defaults(post_tag_guides=False, textmate=False,
             indent_spaces=4, expand_divs=False, last_newline=True,
-            start_guide_format="", end_guide_formats="")
+            start_guide_format="", end_guide_format="", end_guide_newline=True)
 
-    return optparser.parse_args()
+    # Make sure they're the correct types
+    opt_args = optparser.parse_args()
+    opt_args[0].indent_spaces     = int(opt_args[0].indent_spaces)
+    opt_args[0].end_guide_newline = bool(int(opt_args[0].end_guide_newline))
+    return opt_args
 
 def main():
     (options, _) = parse_args()
@@ -932,13 +943,8 @@ def main():
 
     parser = Parser(options, lines)
 
-    try:
-        output = parser.render()
-        sys.stdout.write(output)
-    except:
-        sys.stderr.write("Parse error. Check your input.\n")
-        print sys.exc_info()[0]
-        print sys.exc_info()[1]
+    output = parser.render()
+    sys.stdout.write(output)
 
 if __name__ == "__main__":
     main()

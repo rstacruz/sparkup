@@ -9,7 +9,7 @@ ROOT      := $(PWD)
 PLUGINS_PATH      = plugins
 DOC_PATH          = docs
 DISTRIB_PATH      = sparkup-${VERSION}
-DISTRIB_PLUGINS   = ${DISTRIB_PATH}/textmate ${DISTRIB_PATH}/vim ${DISTRIB_PATH}/generic  ${DISTRIB_PATH}/docs
+DISTRIB_PLUGINS   = ${DISTRIB_PATH}/textmate ${DISTRIB_PATH}/vim ${DISTRIB_PATH}/generic ${DISTRIB_PATH}/docs
 DISTRIB_FILES     = ${DISTRIB_PLUGINS} ${DISTRIB_PATH}/readme.txt
 
 # Files
@@ -31,7 +31,7 @@ all: ${FINAL_ZIP}
 
 # Final .zip
 ${FINAL_ZIP}: distrib
-	cd ${DISTRIB_PATH} && zip -9r "../$@" ${DISTRIB_FILES:${DISTRIB_PATH}/%=%} \
+	cd ${DISTRIB_PATH} && zip -9r "${ROOT}/$@" ${DISTRIB_FILES:${DISTRIB_PATH}/%=%} \
  	  --exclude */.DS_Store --exclude */Thumbs.db --exclude */*.pyc
 
 # Distribution path
