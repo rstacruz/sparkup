@@ -4,7 +4,8 @@ Installation
    Copy the contents of vim/ftplugin/ to your ~/.vim/ftplugin directory.
 
        (Assuming your current dir is sparkup/vim/)
-       $ cp -R ftplugin ~/.vim/
+       $ mkdir -p ~/.vim/ftplugin/html
+       $ cp -R ftplugin/html/* ~/.vim/ftplugin/html/
 
 Configuration
 -------------
