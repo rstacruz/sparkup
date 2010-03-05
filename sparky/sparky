@@ -7,12 +7,19 @@
 # set defaults
 SPARK_SRC_DIR="sparkup"
 SPARK_DST_DIR="html"
+SPARK_DST_EXT=".html"
 SPARKUP="sparkup"
 
 # load custom config
 # to create your own custom config, copy the above two lines to 
 # the following file, and change them to your liking.
-. config.sh
+if [ -f config.sparky ]
+then
+  source config.sparky >/dev/null 2>&1
+fi
+
+# prepare directories
+mkdir -p $SPARK_SRC_DIR $SPARK_DST_DIR >/dev/null 2>&1
 
 echo ">>> Sparky is watching for changes. Press Ctrl-C to Stop."
 
@@ -21,8 +28,8 @@ while true
 do
   for f in $( cd $SPARK_SRC_DIR && find -type f -name "*.spark" )
   do
-    in=$(echo "$SPARK_SRC_DIR/$f" | sed -r 's#/\./#/#g')
-    out=$(echo "$SPARK_DST_DIR/$f" | sed -r 's#/\./#/#g' | sed -r 's/.spark$/.html/i')
+    in=$( echo "$SPARK_SRC_DIR/$f" | sed -r 's#/\./#/#g' )
+    out=$( echo "$SPARK_DST_DIR/$f" | sed -r 's#/\./#/#g' | sed -r "s/.spark$/$SPARK_DST_EXT/i" )
     if [ $in -nt $out ]
     then
       echo ">>> Change detected to: $in"
