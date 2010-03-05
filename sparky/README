@@ -1,7 +1,7 @@
 Sparky is a stand-alone Sparkup compiler written in bash script. 
 Written by Mike Smullin <mike@smullindesign.com>
 Licensed under the MIT
-Inspired by Compss, http://compass-style.org/
+Inspired by Compass, http://compass-style.org/
 
 The rest of the files in this directory are for examples only,
 and are not required for Sparky to function.
