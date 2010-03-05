@@ -1,6 +1,10 @@
-Sparky is a stand-alone bash script. 
-The rest of the files in this directories are for examples only,
-and are not required for sparky to function.
+Sparky is a stand-alone Sparkup compiler written in bash script. 
+Written by Mike Smullin <mike@smullindesign.com>
+Licensed under the MIT
+Inspired by Compss, http://compass-style.org/
+
+The rest of the files in this directory are for examples only,
+and are not required for Sparky to function.
 
 To test sparky, start it running with:
 
@@ -9,7 +13,9 @@ To test sparky, start it running with:
 Now leave it running while you edit ./sparkup/index.spark
 
 As soon as you've made your changes, save the file, and watch
-the output from sparky as it dutifully updates the output file
-located in ./html/index.html
+the output from Sparky as it dutifully updates the destination 
+files located in ./html/
+
+e.g. ./sparkup/index.spark compiles to ./html/index.html
 
 Cool, eh?
