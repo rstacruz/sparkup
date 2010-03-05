@@ -1,0 +1,15 @@
+Sparky is a stand-alone bash script. 
+The rest of the files in this directories are for examples only,
+and are not required for sparky to function.
+
+To test sparky, start it running with:
+
+./sparky
+
+Now leave it running while you edit ./sparkup/index.spark
+
+As soon as you've made your changes, save the file, and watch
+the output from sparky as it dutifully updates the output file
+located in ./html/index.html
+
+Cool, eh?
