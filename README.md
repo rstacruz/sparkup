@@ -26,6 +26,8 @@ You may download Sparkup from Github. [Download the latest version here](http://
 
  - **VIM**: See the `vim/README.txt` file for details.
 
+ - **PSPad**: See the `PSPad/README.txt` file for details.
+
  - **Others/command line use**: You may put `sparkup` in your `$PATH` somewhere. You may then
    invoke it by typing `echo "(input here)" | sparkup`, or `sparkup --help` for a list of commands.
 
