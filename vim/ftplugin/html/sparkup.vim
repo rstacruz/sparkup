@@ -16,12 +16,13 @@ imap <c-n> <c-g>u<Esc>:call SparkupNext()<cr>
 function! SparkupNext()
 =======
 "    Copy the contents of vim/ftplugin/ to your ~/.vim/ftplugin directory.
-"        $ mkdir -p ~/.vim/ftplugin && cp -R vim/ftplugin ~/.vim/ftplugin/
+"
+"        $ cp -R vim/ftplugin ~/.vim/ftplugin/
 "
 " Configuration:
 "   g:sparkup (Default: 'sparkup') -
 "     Location of the sparkup executable. You shouldn't need to change this
-"     setting if you used either of the install options above.
+"     setting if you used the install option above.
 "
 "   g:sparkupArgs (Default: '--no-last-newline') -
 "     Additional args passed to sparkup.
@@ -57,7 +58,7 @@ function! s:Sparkup()
         " sparkup.vim in the runtimepath.
         if !executable(s:sparkup)
             let paths = substitute(escape(&runtimepath, ' '), '\(,\|$\)', '/**\1', 'g')
-            let s:sparkup = fnamemodify(findfile('sparkup.vim', paths), ':p:h:h:h:h') .  '/sparkup'
+            let s:sparkup = findfile('sparkup.py', paths)
 
             if !filereadable(s:sparkup)
                 echohl WarningMsg
