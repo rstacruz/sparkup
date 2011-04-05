@@ -17,6 +17,12 @@
 "
 "   g:sparkupNextMapping (Default: '<c-n>') -
 "     Mapping used to jump to the next empty tag/attribute.
+"
+"   g:sparkupMaps (Default: 1) -
+"     Setup mappings?
+"
+"   g:sparkupMapsNormal (Default: 0) -
+"     Setup mappings for normal mode?
 
 if !exists('g:sparkupExecuteMapping')
   let g:sparkupExecuteMapping = '<c-e>'
@@ -26,10 +32,22 @@ if !exists('g:sparkupNextMapping')
   let g:sparkupNextMapping = '<c-n>'
 endif
 
-exec 'nnoremap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
-exec 'inoremap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
-exec 'nnoremap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
-exec 'inoremap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
+if !exists('g:sparkupMaps')
+  let g:sparkupMaps = 1
+endif
+
+if !exists('g:sparkupMapsNormal')
+  let g:sparkupMapsNormal = 0
+endif
+
+if g:sparkupMaps
+  exec 'inoremap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
+  exec 'inoremap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
+  if g:sparkupMapsNormal
+    exec 'nnoremap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
+    exec 'nnoremap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
+  endif
+endif
 
 if exists('*s:Sparkup')
     finish
