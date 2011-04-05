@@ -40,12 +40,23 @@ if !exists('g:sparkupMapsNormal')
   let g:sparkupMapsNormal = 0
 endif
 
+imap <buffer> <Plug>SparkupExecute <c-g>u<Esc>:call <SID>Sparkup()<cr>
+imap <buffer> <Plug>SparkupNext    <c-g>u<Esc>:call <SID>SparkupNext()<cr>
+
 if g:sparkupMaps
-  exec 'inoremap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
-  exec 'inoremap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
+  if ! hasmapto('<Plug>SparkupExecute', 'i')
+    exec 'inoremap <buffer> ' . g:sparkupExecuteMapping . ' <Plug>SparkupExecute'
+  endif
+  if ! hasmapto('<Plug>SparkupNext', 'i')
+    exec 'inoremap <buffer> ' . g:sparkupNextMapping . ' <Plug>SparkupNext'
+  endif
   if g:sparkupMapsNormal
-    exec 'nnoremap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
-    exec 'nnoremap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
+    if ! hasmapto('<Plug>SparkupExecute', 'n')
+      exec 'nnoremap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
+    endif
+    if ! hasmapto('<Plug>SparkupNext', 'n')
+      exec 'nnoremap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
+    endif
   endif
 endif
 
