@@ -40,8 +40,8 @@ if !exists('g:sparkupMapsNormal')
   let g:sparkupMapsNormal = 0
 endif
 
-imap <buffer> <Plug>SparkupExecute <c-g>u<Esc>:call <SID>Sparkup()<cr>
-imap <buffer> <Plug>SparkupNext    <c-g>u<Esc>:call <SID>SparkupNext()<cr>
+inoremap <buffer> <Plug>SparkupExecute <c-g>u<Esc>:call <SID>Sparkup()<cr>
+inoremap <buffer> <Plug>SparkupNext    <c-g>u<Esc>:call <SID>SparkupNext()<cr>
 
 if g:sparkupMaps
   if ! hasmapto('<Plug>SparkupExecute', 'i')
