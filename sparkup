@@ -156,6 +156,13 @@ class HtmlDialect(Dialect):
             'name': 'script',
             'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
             },
+        'script:yui': {
+              'name': 'script',
+              'attributes': {
+                'src': 'http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js',
+                'charset': 'utf-8'
+                }
+            },
         'link:css': {
             'name': 'link',
             'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
@@ -225,6 +232,7 @@ class HtmlDialect(Dialect):
         'linkcss': 'link:css',
         'scriptsrc': 'script:src',
         'jquery': 'script:jquery',
+        'yui': 'script:yui',
         'jsapi': 'script:jsapi',
         'html5': 'html:5',
         'html4': 'html:4s',
