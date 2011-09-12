@@ -48,6 +48,9 @@ The following people have contributed code to the project:
  - Eric Van Dewoestine (ervandew @ github)
    Improvements to the VIM plugin
 
+ - Danilo Bargen (gwrtheyrn @ github)
+   PSPad plugin
+
 Examples
 --------
 
