@@ -37,3 +37,6 @@ vim:
 	mkdir -p vim/ftplugin/html
 	cp ${SPARKUP_PY} vim/ftplugin/html/sparkup.py
 	#cp ${README} vim/sparkup-readme.txt
+
+vim-install: vim
+	cp -r vim/ftplugin/html ~/.vim/ftplugin/html
