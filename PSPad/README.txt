@@ -2,7 +2,7 @@ REQUIREMENTS
 ------------
 * Python
 * Sparkup
-* Windows Script (http://tinyurl.com/376nwk)
+* Windows Script (http://www.microsoft.com/download/en/details.aspx?id=8247)
 
 INSTALL
 -------
