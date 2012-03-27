@@ -543,9 +543,14 @@ class Element:
         """
 
         output = ""
-        try:    spaces_count = int(self.parser.options.options['indent-spaces'])
-        except: spaces_count = 4
-        spaces = ' ' * spaces_count
+        try: tabs = bool(self.parser.options.options['indent-tabs'])
+        except: tabs = False
+        if tabs: spaces = '\t'
+        else:
+            try: spaces_count = int(self.parser.options.options['indent-spaces'])
+            except: spaces_count = 4
+            spaces = ' ' * spaces_count
+
         indent = self.depth * spaces
         
         prefix, suffix = ('', '')
@@ -828,10 +833,14 @@ class Token:
             name = synonyms[name]
 
         if ':' in name:
-            try:    spaces_count = int(self.parser.options.get('indent-spaces'))
-            except: spaces_count = 4
-            indent = ' ' * spaces_count
-
+            try: tabs = bool(self.parser.options.options['indent-tabs'])
+            except: tabs = False
+            if tabs: indent = '\t'
+            else:
+                try: spaces_count = int(self.parser.options.options['indent-spaces'])
+                except: spaces_count = 4
+                indent = ' ' * spaces_count
+                
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
@@ -1070,6 +1079,7 @@ class Options:
         ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
         ('', 'indent-spaces=', 'Indent spaces'),
+        ('', 'indent-tabs', 'Indent with tabs instead of spaces'),
         ('', 'expand-divs', 'Automatically expand divs'),
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'),
