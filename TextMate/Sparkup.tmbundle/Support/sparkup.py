@@ -835,14 +835,12 @@ class Token:
         if ':' in name:
             try: tabs = bool(self.parser.options.options['indent-tabs'])
             except: tabs = False
-            if tabs: spaces = '\t'
+            if tabs: indent = '\t'
             else:
                 try: spaces_count = int(self.parser.options.options['indent-spaces'])
                 except: spaces_count = 4
-                spaces = ' ' * spaces_count
-
-            indent = self.depth * spaces
-
+                indent = ' ' * spaces_count
+                
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
