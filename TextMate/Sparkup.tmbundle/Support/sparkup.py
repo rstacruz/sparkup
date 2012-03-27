@@ -209,7 +209,6 @@ class HtmlDialect(Dialect):
         'checkbox': 'input:checkbox',
         'check': 'input:checkbox',
         'input:c': 'input:checkbox',
-        'button': 'input:button',
         'input:b': 'input:button',
         'input:h': 'input:hidden',
         'hidden': 'input:hidden',
