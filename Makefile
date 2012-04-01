@@ -35,5 +35,7 @@ textmate:
 
 vim:
 	mkdir -p vim/ftplugin/html
+	rm sparkup.py
+	cp ${SPARKUP_PY} sparkup.py
 	cp ${SPARKUP_PY} vim/ftplugin/html/sparkup.py
 	#cp ${README} vim/sparkup-readme.txt
