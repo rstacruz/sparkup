@@ -34,6 +34,7 @@ textmate:
 	#cp ${README} TextMate/sparkup-readme.txt
 
 vim:
-	mkdir -p vim/ftplugin/html
+	mkdir -p vim/ftplugin/html vim/doc
 	cp ${SPARKUP_PY} vim/ftplugin/html/sparkup.py
-	#cp ${README} vim/sparkup-readme.txt
+	# Add asteriks to title, so it gets matched by `:helptags`
+	sed '1s/.*/*\0*/' ${README} > vim/doc/sparkup.txt
