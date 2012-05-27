@@ -26,10 +26,15 @@ if !exists('g:sparkupNextMapping')
   let g:sparkupNextMapping = '<c-n>'
 endif
 
-exec 'nmap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
-exec 'imap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
-exec 'nmap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
-exec 'imap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
+inoremap <buffer> <Plug>SparkupExecute <c-g>u<Esc>:call <SID>Sparkup()<cr>
+inoremap <buffer> <Plug>SparkupNext    <c-g>u<Esc>:call <SID>SparkupNext()<cr>
+
+if ! hasmapto('<Plug>SparkupExecute', 'i')
+  exec 'imap <buffer> ' . g:sparkupExecuteMapping . ' <Plug>SparkupExecute'
+endif
+if ! hasmapto('<Plug>SparkupNext', 'i')
+  exec 'imap <buffer> ' . g:sparkupNextMapping . ' <Plug>SparkupNext'
+endif
 
 if exists('*s:Sparkup')
     finish
