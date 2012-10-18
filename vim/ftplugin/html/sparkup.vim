@@ -80,6 +80,7 @@ function! s:Sparkup()
                 echohl WarningMsg
                 echom 'Warning: could not find sparkup/sparkup.py on your path or in your vim runtime path.'
                 echohl None
+                unlet s:sparkup
                 return
             endif
         endif
