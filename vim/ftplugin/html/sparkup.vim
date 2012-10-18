@@ -80,7 +80,7 @@ function! s:Sparkup()
                 echohl WarningMsg
                 echom 'Warning: could not find sparkup on your path or in your vim runtime path.'
                 echohl None
-                finish
+                return
             endif
         endif
         let s:sparkup = '"' . s:sparkup . '"'
