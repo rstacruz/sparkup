@@ -74,7 +74,7 @@ function! s:Sparkup()
         " sparkup.vim in the runtimepath.
         if !executable(s:sparkup)
             let paths = substitute(escape(&runtimepath, ' '), '\(,\|$\)', '/**\1', 'g')
-            let s:sparkup = findfile('sparkup.py', paths)
+            let s:sparkup = fnamemodify(findfile('sparkup.py', paths), ':p')
 
             if !filereadable(s:sparkup)
                 echohl WarningMsg
