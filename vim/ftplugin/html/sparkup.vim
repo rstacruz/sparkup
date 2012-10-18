@@ -78,7 +78,7 @@ function! s:Sparkup()
 
             if !filereadable(s:sparkup)
                 echohl WarningMsg
-                echom 'Warning: could not find sparkup on your path or in your vim runtime path.'
+                echom 'Warning: could not find sparkup/sparkup.py on your path or in your vim runtime path.'
                 echohl None
                 return
             endif
