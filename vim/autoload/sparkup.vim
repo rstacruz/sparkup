@@ -34,16 +34,7 @@ function! sparkup#Expand()
     let s:c.cmd = shellescape(s:c.python).' '.shellescape(s:c.py_file).' '.s:c.args.' --indent-spaces='.&sw
     exec '.!' . s:c.cmd
   else
-      py << EOF
-if not 'sparkup_router' in globals():
-    import sys, vim
-    sys.path.append(vim.eval("g:sparkup.plugin_home"))
-    import sparkup
-    sparkup_router = sparkup.Router()
-
-options = { 'indent-spaces': vim.eval('&sw') }
-vim.current.line = sparkup_router.start(options, vim.current.line, True)
-EOF
+    exec 'pyfile '.fnameescape(g:sparkup.plugin_home).'/vim/autoload/sparkup_helper.py'
   endif
   call sparkup#Next()
 endfunction
