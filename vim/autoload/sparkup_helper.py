@@ -9,8 +9,10 @@ def sparkup_expand():
 
     options = { 'indent-spaces': vim.eval('&sw') }
     lines = sparkup_router.start(options, vim.current.line, True).split("\n")
+    if (lines[-1] == ""):
+        lines.pop()
     vim.current.line = lines[0]
-    if len(lines) > 0:
+    if len(lines) > 1:
         vim.current.buffer.append(lines[1:], int(vim.eval("line('.')")))
 
 sparkup_expand()
