@@ -27,9 +27,9 @@ if !exists('g:sparkupNextMapping')
 endif
 
 exec 'nmap <buffer> ' . g:sparkupExecuteMapping . ' :call <SID>Sparkup()<cr>'
-exec 'imap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
+exec 'inoremap <buffer> ' . g:sparkupExecuteMapping . ' <c-g>u<Esc>:call <SID>Sparkup()<cr>'
 exec 'nmap <buffer> ' . g:sparkupNextMapping . ' :call <SID>SparkupNext()<cr>'
-exec 'imap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
+exec 'inoremap <buffer> ' . g:sparkupNextMapping . ' <c-g>u<Esc>:call <SID>SparkupNext()<cr>'
 
 if exists('*s:Sparkup')
     finish
