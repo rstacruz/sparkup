@@ -536,7 +536,7 @@ class Element:
                 self.attributes[key] = attrib
 
         # Copy over from parameters
-        if attributes: self.attributes = attribues
+        if attributes: self.attributes = attributes
         if name:       self.name       = name
         if text:       self.text       = text
 
@@ -1036,7 +1036,7 @@ class Options:
             err = sys.exc_info()[1]
             sys.stderr.write("Options error: %s\n" % err)
             sys.stderr.write("Try --help for a list of arguments.\n")
-            return router.exit()
+            router.exit()
 
         # Sort them out into options
         options = {}
