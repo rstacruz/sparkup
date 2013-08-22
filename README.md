@@ -26,6 +26,15 @@ You may download Sparkup from Github. [Download the latest version here](http://
 
  - **VIM**: See the `vim/README.txt` file for details.
 
+ - **VIM Pathogen**
+     - Clone this repo into `~/.vim/bundle/sparkup`
+     - Pathogen will look for plugins starting from `bundle/<plugin name>`. By cloning this repo into `bundle`, pathogen cannot find the plugin out of the box. To help pathogen find it, add the following line in your `.vimrc`.
+
+        ```` viml
+        autocmd FileType htmldjango runtime! vim/ftplugin/html/sparkup.vim
+        ````
+     - Run `make vim`
+
  - **Others/command line use**: You may put `sparkup` in your `$PATH` somewhere. You may then
    invoke it by typing `echo "(input here)" | sparkup`, or `sparkup --help` for a list of commands.
 
