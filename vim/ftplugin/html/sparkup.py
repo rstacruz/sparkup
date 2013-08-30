@@ -296,7 +296,7 @@ class Parser:
         self.tokens = []
         self.str = str
         self.options = options
-        if self.options.has("xml"):
+        if self.options.has("filetype") and self.options.get("filetype") == "xml":
             self.dialect = XmlDialect()
         else:
             self.dialect = HtmlDialect()
@@ -1081,7 +1081,7 @@ class Options:
     cmdline_keys = [
         ('h', 'help', 'Shows help'),
         ('v', 'version', 'Shows the version'),
-        ('', 'html', 'enable html attribute fillings (default)'),
+        ('', 'filetype=',  'enable html attribute fillings unless filetype=xml'),
         ('', 'no-guides', 'Deprecated'),
         ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
@@ -1090,7 +1090,6 @@ class Options:
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'),
         ('', 'end-guide-format=', 'To be documented'),
-        ('', 'xml', 'Skip html attribute fillings'),
         ('', 'html5-self-closing', 'Use HTML5 <br> instead of HTML4 <br />'),
     ]
 
