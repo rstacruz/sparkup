@@ -5,7 +5,7 @@
 	<key>beforeRunningCommand</key>
 	<string>nop</string>
 	<key>command</key>
-	<string>#!/usr/bin/env python
+	<string>#!/usr/bin/env python2
 import sys; import os; sys.path.append(os.getenv('TM_BUNDLE_SUPPORT')); import sparkup
 
 # You may change these options to your liking.
