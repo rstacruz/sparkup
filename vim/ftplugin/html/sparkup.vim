@@ -45,10 +45,10 @@ inoremap <buffer> <Plug>SparkupNext    <c-g>u<Esc>:call <SID>SparkupNext()<cr>
 
 if g:sparkupMaps
   if ! hasmapto('<Plug>SparkupExecute', 'i')
-    exec 'inoremap <buffer> ' . g:sparkupExecuteMapping . ' <Plug>SparkupExecute'
+    exec 'imap <buffer> ' . g:sparkupExecuteMapping . ' <Plug>SparkupExecute'
   endif
   if ! hasmapto('<Plug>SparkupNext', 'i')
-    exec 'inoremap <buffer> ' . g:sparkupNextMapping . ' <Plug>SparkupNext'
+    exec 'imap <buffer> ' . g:sparkupNextMapping . ' <Plug>SparkupNext'
   endif
   if g:sparkupMapsNormal
     if ! hasmapto('<Plug>SparkupExecute', 'n')
