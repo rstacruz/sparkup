@@ -69,7 +69,7 @@ class SparkupTest:
             },
         'Multiplier test 2': {
             'input': 'ul > li.item-$*3',
-            'output': '<ul>\n    <li class="item-1">$1</li>\n    <li class="item-2">$2</li>\n    <li class="item-3">$3</li>\n</ul>$0' 
+            'output': '<ul>\n    <li class="item-1">$1</li>\n    <li class="item-2">$2</li>\n    <li class="item-3">$3</li>\n</ul>$0'
             },
         'Multiplier test 3': {
             'input': 'ul > li.item-$*3 > a',
@@ -98,6 +98,10 @@ class SparkupTest:
         'Attribute with dot test': {
             'input': 'p [attrib=text.com]',
             'output': '<p attrib="text.com">$1</p>$0'
+            },
+        'Nested curly braces test': {
+            'input': 'p{{{ title }}}',
+            'output': '<p>{{ title }}</p>$0'
             },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
