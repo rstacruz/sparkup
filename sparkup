@@ -869,7 +869,7 @@ class Token:
 
         # Try looking for text
         text = None
-        for text in re.findall('\{([^\}]*)\}', self.str):
+        for text in re.findall('\{(.*?)\}(?!\})', self.str):
             self.str = self.str.replace("{" + text + "}", "")
         if text is not None:
             self.text = text
