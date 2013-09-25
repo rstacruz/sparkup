@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 version = "0.1.3"
 
@@ -15,6 +15,15 @@ class Dialect:
     synonyms = {}
     required = {}
     short_tags = ()
+
+class XmlDialect(Dialect):
+    shortcuts = {
+        }
+    synonyms = {
+        }
+    short_tags = ()
+    required = {
+    }
 
 class HtmlDialect(Dialect):
     shortcuts = {
@@ -288,14 +297,17 @@ class Parser:
     # Constructor
     # --------------------------------------------------------------------------- 
 
-    def __init__(self, options=None, str='', dialect=HtmlDialect()):
+    def __init__(self, options=None, str=''):
         """Constructor.
         """
 
         self.tokens = []
         self.str = str
         self.options = options
-        self.dialect = dialect
+        if self.options.has("xml"):
+            self.dialect = XmlDialect()
+        else:
+            self.dialect = HtmlDialect()
         self.root = Element(parser=self)
         self.caret = []
         self.caret.append(self.root)
@@ -865,7 +877,7 @@ class Token:
 
         # Try looking for text
         text = None
-        for text in re.findall('\{([^\}]*)\}', self.str):
+        for text in re.findall('\{(.*?)\}(?!\})', self.str):
             self.str = self.str.replace("{" + text + "}", "")
         if text is not None:
             self.text = text
@@ -1074,6 +1086,7 @@ class Options:
     cmdline_keys = [
         ('h', 'help', 'Shows help'),
         ('v', 'version', 'Shows the version'),
+        ('', 'html', 'enable html attribute fillings (default)'),
         ('', 'no-guides', 'Deprecated'),
         ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
@@ -1082,6 +1095,7 @@ class Options:
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'),
         ('', 'end-guide-format=', 'To be documented'),
+        ('', 'xml', 'skip html attribute fillings'),
     ]
     
     # Property: router
