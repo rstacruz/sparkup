@@ -36,8 +36,8 @@ class HtmlDialect(Dialect):
                 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">\n' +
                 '<html lang="en">\n' +
                 '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '\t' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                '\t' + '<title></title>\n' + 
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -49,8 +49,8 @@ class HtmlDialect(Dialect):
                 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\n' +
                 '<html lang="en">\n' +
                 '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '\t' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                '\t' + '<title></title>\n' + 
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -62,8 +62,8 @@ class HtmlDialect(Dialect):
                 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n' +
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '\t' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                '\t' + '<title></title>\n' + 
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -75,8 +75,8 @@ class HtmlDialect(Dialect):
                 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' +
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '\t' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                '\t' + '<title></title>\n' + 
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -88,8 +88,8 @@ class HtmlDialect(Dialect):
                 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n' +
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '\t' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                '\t' + '<title></title>\n' + 
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -101,8 +101,8 @@ class HtmlDialect(Dialect):
                 '<!DOCTYPE html>\n' +
                 '<html lang="en">\n' +
                 '<head>\n' +
-                '    ' + '<meta charset="UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '\t' + '<meta charset="UTF-8" />\n' +
+                '\t' + '<title></title>\n' + 
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -209,7 +209,6 @@ class HtmlDialect(Dialect):
         'checkbox': 'input:checkbox',
         'check': 'input:checkbox',
         'input:c': 'input:checkbox',
-        'button': 'input:button',
         'input:b': 'input:button',
         'input:h': 'input:hidden',
         'hidden': 'input:hidden',
@@ -543,9 +542,14 @@ class Element:
         """
 
         output = ""
-        try:    spaces_count = int(self.parser.options.options['indent-spaces'])
-        except: spaces_count = 4
-        spaces = ' ' * spaces_count
+        try: tabs = bool(self.parser.options.options['indent-tabs'])
+        except: tabs = False
+        if tabs: spaces = '\t'
+        else:
+            try: spaces_count = int(self.parser.options.options['indent-spaces'])
+            except: spaces_count = 4
+            spaces = ' ' * spaces_count
+
         indent = self.depth * spaces
         
         prefix, suffix = ('', '')
@@ -828,10 +832,14 @@ class Token:
             name = synonyms[name]
 
         if ':' in name:
-            try:    spaces_count = int(self.parser.options.get('indent-spaces'))
-            except: spaces_count = 4
-            indent = ' ' * spaces_count
-
+            try: tabs = bool(self.parser.options.options['indent-tabs'])
+            except: tabs = False
+            if tabs: indent = '\t'
+            else:
+                try: spaces_count = int(self.parser.options.options['indent-spaces'])
+                except: spaces_count = 4
+                indent = ' ' * spaces_count
+                
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
@@ -1070,6 +1078,7 @@ class Options:
         ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
         ('', 'indent-spaces=', 'Indent spaces'),
+        ('', 'indent-tabs', 'Indent with tabs instead of spaces'),
         ('', 'expand-divs', 'Automatically expand divs'),
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'),
