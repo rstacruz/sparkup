@@ -68,7 +68,7 @@ function! s:Sparkup()
     if !exists('s:sparkup')
         let s:sparkup = exists('g:sparkup') ? g:sparkup : 'sparkup'
         let s:sparkupArgs = exists('g:sparkupArgs') ? g:sparkupArgs : '--no-last-newline'
-        let s:sparkupArgs = s:sparkupArgs . ' --' . &filetype
+        let s:sparkupArgs = s:sparkupArgs . ' --filetype=' . &filetype
 
         " check the user's path first. if not found then search relative to
         " sparkup.vim in the runtimepath.
