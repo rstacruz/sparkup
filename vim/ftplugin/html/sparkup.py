@@ -8,7 +8,7 @@ import getopt
 import sys
 import re
 
-# =============================================================================== 
+# =============================================================================
 
 class Dialect:
     shortcuts = {}
@@ -46,7 +46,7 @@ class HtmlDialect(Dialect):
                 '<html lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -59,7 +59,7 @@ class HtmlDialect(Dialect):
                 '<html lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -72,7 +72,7 @@ class HtmlDialect(Dialect):
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -85,7 +85,7 @@ class HtmlDialect(Dialect):
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -98,7 +98,7 @@ class HtmlDialect(Dialect):
                 '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -111,7 +111,7 @@ class HtmlDialect(Dialect):
                 '<html lang="en">\n' +
                 '<head>\n' +
                 '    ' + '<meta charset="UTF-8" />\n' +
-                '    ' + '<title></title>\n' + 
+                '    ' + '<title></title>\n' +
                 '</head>\n' +
                 '<body>',
             'closing_tag':
@@ -287,7 +287,7 @@ class Parser:
     """
 
     # Constructor
-    # --------------------------------------------------------------------------- 
+    # -------------------------------------------------------------------------
 
     def __init__(self, options=None, str=''):
         """Constructor.
@@ -305,8 +305,8 @@ class Parser:
         self.caret.append(self.root)
         self._last = []
 
-    # Methods 
-    # --------------------------------------------------------------------------- 
+    # Methods
+    # -------------------------------------------------------------------------
 
     def load_string(self, str):
         """Loads a string to parse.
@@ -339,8 +339,8 @@ class Parser:
 
         return output
 
-    # Protected methods 
-    # --------------------------------------------------------------------------- 
+    # Protected methods
+    # -------------------------------------------------------------------------
 
     def _textmatify(self, output):
         """Returns a version of the output with TextMate placeholders in it.
@@ -438,7 +438,7 @@ class Parser:
         return
 
     # Properties
-    # --------------------------------------------------------------------------- 
+    # -------------------------------------------------------------------------
 
     # Property: dialect
     # The dialect of XML
@@ -458,7 +458,7 @@ class Parser:
 
     # Property: root
     # The root [[Element]] node.
-    root = None 
+    root = None
 
     # Property: caret
     # The current insertion point.
@@ -484,7 +484,7 @@ class Parser:
     suffix = ''
     pass
 
-# =============================================================================== 
+# =============================================================================
 
 class Element:
     """An element.
@@ -559,7 +559,7 @@ class Element:
         except: spaces_count = 4
         spaces = ' ' * spaces_count
         indent = self.depth * spaces
-        
+
         prefix, suffix = ('', '')
         if self.prefix: prefix = self.prefix + "\n"
         if self.suffix: suffix = self.suffix
@@ -621,32 +621,35 @@ class Element:
 
             # Uh..
             elif self.name != '' or \
-                 self.opening_tag is not None or \
-                 self.closing_tag is not None:
+                self.opening_tag is not None or \
+                self.closing_tag is not None:
                 output = start_guide + \
-                         indent + self.get_opening_tag() + "\n" + \
-                         output + \
-                         indent + self.get_closing_tag() + \
-                         guide + end_guide + "\n"
-            
+                    indent + self.get_opening_tag() + "\n" + \
+                    output + \
+                    indent + self.get_closing_tag() + \
+                    guide + end_guide + "\n"
 
-        # Short, self-closing tags (<br />)
-        elif self.name in short_tags: 
-            output = "%s<%s />\n" % (indent, self.get_default_tag())
+
+        # Short, self-closing tags (<br> or <br /> depending on configuration)
+        elif self.name in short_tags:
+            if self.parser.options.has('html5-self-closing'):
+                output = "%s<%s>\n" % (indent, self.get_default_tag())
+            else:
+                output = "%s<%s />\n" % (indent, self.get_default_tag())
 
         # Tags with text, possibly
         elif self.name != '' or \
-             self.opening_tag is not None or \
-             self.closing_tag is not None:
+            self.opening_tag is not None or \
+            self.closing_tag is not None:
             output = "%s%s%s%s%s%s%s%s" % \
                 (start_guide, indent, self.get_opening_tag(), \
-                 self.text, \
-                 self.get_closing_tag(), \
-                 guide, end_guide, "\n")
+                self.text, \
+                self.get_closing_tag(), \
+                guide, end_guide, "\n")
 
         # Else, it's an empty-named element (like the root). Pass.
-        else: pass
-
+        else:
+            pass
 
         return output
 
@@ -752,13 +755,13 @@ class Element:
                     if attrib not in self.attributes:
                         self.attributes[attrib] = attribs[attrib]
 
-    # ---------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     # Property: last_child
     # [Read-only]
     last_child = property(get_last_child)
 
-    # ---------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     # Property: parent
     # (Element) The parent element.
@@ -796,7 +799,7 @@ class Element:
     prefix = None
     suffix = None
 
-# =============================================================================== 
+# =============================================================================
 
 class Token:
     def __init__(self, str, parser=None):
@@ -824,7 +827,7 @@ class Token:
         else:
             self.type = Token.ELEMENT
             self._init_element()
-        
+
     def _init_element(self):
         """Initializes. Only called if the token is an element token.
         [Private]
@@ -904,7 +907,7 @@ class Token:
             if '!' in flags: self.expand = True
 
     def __str__(self):
-        return self.str 
+        return self.str
 
     str = ''
     parser = None
@@ -922,25 +925,25 @@ class Token:
 
     # Type
     type = 0
-    ELEMENT = 2 
+    ELEMENT = 2
     CHILD = 4
     PARENT = 8
     SIBLING = 16
 
-# =============================================================================== 
+# =============================================================================
 
 class Router:
     """The router.
     """
 
-    # Constructor 
-    # --------------------------------------------------------------------------- 
+    # Constructor
+    # -------------------------------------------------------------------------
 
     def __init__(self):
         pass
 
-    # Methods 
-    # --------------------------------------------------------------------------- 
+    # Methods
+    # -------------------------------------------------------------------------
 
     def start(self, options=None, str=None, ret=None):
         if (options):
@@ -956,13 +959,13 @@ class Router:
 
         else:
             return self.parse(str=str, ret=ret)
-    
+
     def help(self):
         print "Usage: %s [OPTIONS]" % sys.argv[0]
         print "Expands input into HTML."
         print ""
         for short, long, info in self.options.cmdline_keys:
-            if "Deprecated" in info: continue 
+            if "Deprecated" in info: continue
             if not short == '': short = '-%s,' % short
             if not long  == '': long  = '--%s' % long.replace("=", "=XXX")
 
@@ -991,7 +994,7 @@ class Router:
         except:
             sys.stderr.write("Reading failed.\n")
             return
-            
+
         try:
             self.parser.load_string(lines)
             output = self.parser.render()
@@ -1010,7 +1013,7 @@ class Router:
         "Please refer to the manual for more information.",
     ]
 
-# =============================================================================== 
+# =============================================================================
 
 class Options:
     def __init__(self, router, argv, options=None):
@@ -1087,14 +1090,15 @@ class Options:
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'),
         ('', 'end-guide-format=', 'To be documented'),
-        ('', 'xml', 'skip html attribute fillings'),
+        ('', 'xml', 'Skip html attribute fillings'),
+        ('', 'html5-self-closing', 'Use HTML5 <br> instead of HTML4 <br />'),
     ]
-    
+
     # Property: router
     # Router
     router = 1
 
-# =============================================================================== 
+# =============================================================================
 
 if __name__ == "__main__":
     z = Router()
