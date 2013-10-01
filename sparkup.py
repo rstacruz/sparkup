@@ -633,10 +633,10 @@ class Element:
 
         # Short, self-closing tags (<br> or <br /> depending on configuration)
         elif self.name in short_tags:
-            if self.parser.options.has('html5-self-closing'):
-                output = "%s<%s>\n" % (indent, self.get_default_tag())
-            else:
+            if self.parser.options.has('no-html5-self-closing'):
                 output = "%s<%s />\n" % (indent, self.get_default_tag())
+            else:
+                output = "%s<%s>\n" % (indent, self.get_default_tag())
 
         # Tags with text, possibly
         elif self.name != '' or \
@@ -1092,7 +1092,7 @@ class Options:
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'), # << TODO
         ('', 'end-guide-format=', 'To be documented'),   # << TODO
-        ('', 'html5-self-closing', 'Use HTML5 <br> instead of HTML4 <br />'),
+        ('', 'no-html5-self-closing', 'Use HTML4 <br /> instead of HTML5 <br>'),
     ]
 
     # Property: router
