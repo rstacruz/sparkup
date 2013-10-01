@@ -155,7 +155,7 @@ class HtmlDialect(Dialect):
             },
         'script:jquery': {
             'name': 'script',
-            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js' }
+            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' }
             },
         'script:jsapi': {
             'name': 'script',
@@ -163,7 +163,7 @@ class HtmlDialect(Dialect):
             },
         'script:jsapix': {
             'name': 'script',
-            'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
+            'text': '\n    google.load("jquery", "1.7.1");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
             },
         'link:css': {
             'name': 'link',
