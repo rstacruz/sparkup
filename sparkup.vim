@@ -86,8 +86,8 @@ function! s:Sparkup()
         endif
         let s:sparkup = '"' . s:sparkup . '"'
         let s:sparkup .= printf(' %s --indent-spaces=%s', s:sparkupArgs, &shiftwidth)
-        " If the user's settings are to indent with tabs, do so!
-        " TODO textmate version of this functionality
+        " If the user's vim configuration is to use tabs, do so automatically.
+        " TODO the same logic for the textmate version
         if !&expandtab
             let s:sparkup .= ' --indent-tabs'
         endif
