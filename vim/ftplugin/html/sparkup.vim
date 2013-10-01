@@ -91,11 +91,8 @@ function! s:Sparkup()
         if !&expandtab
             let s:sparkup .= ' --indent-tabs'
         endif
-        if has('win32') || has('win64')
-            let s:sparkup = 'python ' . s:sparkup
-        endif
     endif
-    exec '.!' . s:sparkup
+    exec '.!python ' . s:sparkup
     call s:SparkupNext()
 endfunction
 
