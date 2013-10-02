@@ -12,6 +12,15 @@ class Dialect:
     required = {}
     short_tags = ()
 
+class XmlDialect(Dialect):
+    shortcuts = {
+        }
+    synonyms = {
+        }
+    short_tags = ()
+    required = {
+        }
+
 class HtmlDialect(Dialect):
     # TODO: the indentation in snippets should also be based on the user's
     # indentation configuration
