@@ -1,5 +1,7 @@
-import os
-import fileinput
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+version = "0.1.3"
+
 import getopt
 import sys
 import re
@@ -13,13 +15,10 @@ class Dialect:
     short_tags = ()
 
 class XmlDialect(Dialect):
-    shortcuts = {
-        }
-    synonyms = {
-        }
+    shortcuts = {}
+    synonyms = {}
     short_tags = ()
-    required = {
-        }
+    required = {}
 
 class HtmlDialect(Dialect):
     # TODO: the indentation in snippets should also be based on the user's
@@ -298,7 +297,7 @@ class Parser:
         self.tokens = []
         self.str = str
         self.options = options
-        if self.options.has("filetype") and self.options.get("filetype") == "xml":
+        if self.options.has("xml"):
             self.dialect = XmlDialect()
         else:
             self.dialect = HtmlDialect()
@@ -538,7 +537,7 @@ class Element:
                 self.attributes[key] = attrib
 
         # Copy over from parameters
-        if attributes: self.attributes = attribues
+        if attributes: self.attributes = attributes
         if name:       self.name       = name
         if text:       self.text       = text
 
@@ -551,9 +550,9 @@ class Element:
         if self.populate: self._populate()
 
     def render(self):
-        """renders the element, along with it's subelements, into html code.
+        """Renders the element, along with it's subelements, into HTML code.
 
-        [grouped under "rendering methods"]
+        [Grouped under "Rendering methods"]
         """
 
         output = ""
@@ -853,10 +852,6 @@ class Token:
             name = synonyms[name]
 
         if ':' in name:
-            try:    spaces_count = int(self.parser.options.get('indent-spaces'))
-            except: spaces_count = 4
-            indent = ' ' * spaces_count
-
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
@@ -991,7 +986,6 @@ class Router:
 
         try:
             # Read the files
-            # for line in fileinput.input(): lines.append(line.rstrip(os.linesep))
             if str is not None:
                 lines = str
             else:
@@ -1053,7 +1047,6 @@ class Options:
 
         # Sort them out into options
         options = {}
-        i = 0
         for option in getoptions:
             key, value = option # '--version', ''
             if (value == ''): value = True
@@ -1091,7 +1084,6 @@ class Options:
     cmdline_keys = [
         ('h', 'help', 'Shows help'),
         ('v', 'version', 'Shows the version'),
-        ('', 'filetype=', 'enable html attribute fillings unless filetype=xml'),
         ('', 'no-guides', 'Deprecated'),
         ('', 'post-tag-guides', 'Adds comments at the end of DIV tags'),
         ('', 'textmate', 'Adds snippet info (textmate mode)'),
@@ -1101,6 +1093,7 @@ class Options:
         ('', 'no-last-newline', 'Skip the trailing newline'),
         ('', 'start-guide-format=', 'To be documented'), # << TODO
         ('', 'end-guide-format=', 'To be documented'),   # << TODO
+        ('', 'xml', 'Skip html attribute fillings'),
         ('', 'no-html5-self-closing', 'Use HTML4 <br /> instead of HTML5 <br>'),
     ]
 
