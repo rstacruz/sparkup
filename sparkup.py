@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+version = "0.1.3"
+
 import os
 import fileinput
 import getopt
@@ -551,9 +555,9 @@ class Element:
         if self.populate: self._populate()
 
     def render(self):
-        """renders the element, along with it's subelements, into html code.
+        """Renders the element, along with it's subelements, into HTML code.
 
-        [grouped under "rendering methods"]
+        [Grouped under "Rendering methods"]
         """
 
         output = ""
