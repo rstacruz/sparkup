@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 version = "0.1.3"
 
-import os
-import fileinput
 import getopt
 import sys
 import re
@@ -17,13 +15,10 @@ class Dialect:
     short_tags = ()
 
 class XmlDialect(Dialect):
-    shortcuts = {
-        }
-    synonyms = {
-        }
+    shortcuts = {}
+    synonyms = {}
     short_tags = ()
-    required = {
-        }
+    required = {}
 
 class HtmlDialect(Dialect):
     # TODO: the indentation in snippets should also be based on the user's
@@ -857,10 +852,6 @@ class Token:
             name = synonyms[name]
 
         if ':' in name:
-            try:    spaces_count = int(self.parser.options.get('indent-spaces'))
-            except: spaces_count = 4
-            indent = ' ' * spaces_count
-
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
                 for key, value in shortcuts[name].iteritems():
@@ -995,7 +986,6 @@ class Router:
 
         try:
             # Read the files
-            # for line in fileinput.input(): lines.append(line.rstrip(os.linesep))
             if str is not None:
                 lines = str
             else:
@@ -1057,7 +1047,6 @@ class Options:
 
         # Sort them out into options
         options = {}
-        i = 0
         for option in getoptions:
             key, value = option # '--version', ''
             if (value == ''): value = True
