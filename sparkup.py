@@ -537,7 +537,7 @@ class Element:
                 self.attributes[key] = attrib
 
         # Copy over from parameters
-        if attributes: self.attributes = attribues
+        if attributes: self.attributes = attributes
         if name:       self.name       = name
         if text:       self.text       = text
 
