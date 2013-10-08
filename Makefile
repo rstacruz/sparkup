@@ -1,4 +1,7 @@
-SPARKUP_PY=sparkup
+# Makefile for sparkup distribution
+# TODO: this should use a separate build dir to copy SPARKUP_PY into.
+#       SPARKUP_PY should not reside in the Vim runtime dir (getting not updated via Git!)
+SPARKUP_PY=sparkup.py
 VERSION=`date '+%Y%m%d'`
 README=README.md
 
@@ -24,7 +27,7 @@ all-dist:
 	cp distribution/sparkup-${VERSION}.zip distribution/sparkup-latest.zip
 
 generic:
-	cat sparkup.py > generic/sparkup
+	cat ${SPARKUP_PY} > generic/sparkup
 	chmod +x generic/sparkup
 	#cp ${README} generic/sparkup-readme.txt
 
