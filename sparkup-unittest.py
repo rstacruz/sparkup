@@ -105,8 +105,10 @@ class SparkupTest:
             },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
+
     def run(self):
         """Run Forrest run!"""
+        failures = 0
 
         print "Test results:"
         for name, case in self.cases.iteritems():
@@ -129,6 +131,7 @@ class SparkupTest:
 
             print " - %-30s [%s]" % (name, result_str)
             if not result:
+                failures += 1
                 print "= %s" % input.replace("\n", "\n= ")
                 print "Actual output (condensed):"
                 print " | '%s'" % output.replace("\n", r"\n").replace('"', '\"')
@@ -137,6 +140,8 @@ class SparkupTest:
                 print "Expected:"
                 print " | %s" % case['output'].replace("\n", "\ n| ")
 
+        return failures
+
 if __name__ == '__main__':
     s = SparkupTest()
-    s.run()
+    sys.exit(s.run())
