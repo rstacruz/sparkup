@@ -906,7 +906,7 @@ class Token:
         # Get the tag name. Default to DIV if none given.
         name = re.findall('^([\w\-:]*)', self.str)[0]
         if self.parser.options.options['namespaced-elements'] == True:
-            name = name.lower().replace('-', ':')
+            name = name.replace('-', ':')
 
         # Find synonyms through this thesaurus
         synonyms = self.parser.dialect.synonyms
