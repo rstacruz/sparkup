@@ -49,7 +49,7 @@ class SparkupTest:
             },
         'Shortcut synonym test': {
             'input': 'button',
-            'output': '<input type="button" class="button" value="$1" name="$2" />$0'
+            'output': '<button>$1</button>$0',
             },
         'Child test': {
             'input': 'div>ul>li',
