@@ -34,13 +34,15 @@ generic:
 textmate:
 	#cp ${README} TextMate/sparkup-readme.txt
 
-vim:
-	mkdir -p vim/doc
-	# Add asteriks to title, so it gets matched by `:helptags`
-	sed '1s/.*/*\0*/' ${README} > vim/doc/sparkup.txt
+vim: vim/doc/sparkup.txt
 
 # create pathogen friendly structure
 vim-pathogen: vim ftplugin doc
 
 ftplugin doc:
 	ln -s vim/$@
+
+# Add asterisks to title, so it gets matched by `:helptags`
+vim/doc/sparkup.txt: ${README}
+	mkdir -p $(@D)
+	sed '1s/.*/*\0*/' $< > $@
