@@ -11,6 +11,12 @@ Installation
        (Assuming your current dir is sparkup/vim/)
        $ cp ../sparkup.py ~/.vim/
 
+Or use tpope's vim-pathogen:
+
+       cd ~/.vim/bundle ; git clone
+       cd sparkup
+       make vim-pathogen
+
 Configuration
 -------------
 

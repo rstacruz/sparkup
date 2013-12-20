@@ -38,3 +38,9 @@ vim:
 	mkdir -p vim/doc
 	# Add asteriks to title, so it gets matched by `:helptags`
 	sed '1s/.*/*\0*/' ${README} > vim/doc/sparkup.txt
+
+# create pathogen friendly structure
+vim-pathogen: vim ftplugin doc
+
+ftplugin doc:
+	ln -s vim/$@
