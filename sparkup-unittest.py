@@ -107,6 +107,10 @@ class SparkupTest:
             'input': 'p{{{ title }}}',
             'output': '<p>{{ title }}</p>$0'
             },
+        'Nested curly braces test (#54)': {
+            'input': 'html>head>title{${title}}',
+            'output': '<html>\n    <head>\n        <title>${title}</title>\n    </head>\n</html>$0'
+            },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
     def run(self):
