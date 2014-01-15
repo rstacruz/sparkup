@@ -111,7 +111,7 @@ endfunction
 
 function! s:SparkupNext()
     " 1: empty tag, 2: empty attribute, 3: empty line
-    let n = search('><\/\|\(""\)\|^\s*$', 'Wp')
+    let n = search('><\/\|\(""\)\|\(^\s*$\)', 'Wp')
     if n == 3
         startinsert!
     else

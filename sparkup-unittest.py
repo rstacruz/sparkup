@@ -99,6 +99,10 @@ class SparkupTest:
             'input': 'p [attrib=text.com]',
             'output': '<p attrib="text.com">$1</p>$0'
             },
+        'PHP tag test': {
+            'input': 'php',
+            'output': '<?php\n    $1\n?>$0',
+            },
         'Nested curly braces test': {
             'input': 'p{{{ title }}}',
             'output': '<p>{{ title }}</p>$0'

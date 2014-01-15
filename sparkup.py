@@ -37,6 +37,11 @@ class HtmlDialect(Dialect):
         'cc:noie': {
             'opening_tag': '<!--[if !IE]><!-->',
             'closing_tag': '<!--<![endif]-->'},
+        'php:t': {
+            'expand': True,
+            'opening_tag': '<?php',
+            'closing_tag': '?>',
+            },
         'html:4t': {
             'expand': True,
             'opening_tag':
@@ -217,6 +222,7 @@ class HtmlDialect(Dialect):
             },
         }
     synonyms = {
+        'php': 'php:t',
         'checkbox': 'input:checkbox',
         'check': 'input:checkbox',
         'input:c': 'input:checkbox',
