@@ -4,6 +4,9 @@ Sparkup
 **Sparkup lets you write HTML code faster.** Don't believe us?
 [See it in action!](http://www.youtube.com/watch?v=Jw3jipcenKc)
 
+Fixed by Zhao:
+This is a fork of original version. This version support both python 2 and 3.
+
 You can write HTML in a CSS-like syntax, and have Sparkup handle the expansion to full HTML
 code. It is meant to help you write long HTML blocks in your text editor by letting you
 type less characters than needed.
