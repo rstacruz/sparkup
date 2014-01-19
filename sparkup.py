@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-version = "0.1.3"
+version = "0.1.4"
 
 import getopt
 import sys
 import re
 
 # =============================================================================
+
+def iteritems(obj):
+    """iteritems() in python2 and items() in python3"""
+    if sys.version[0] == '2':
+        return obj.iteritems()
+    else:
+        return obj.items()
 
 class Dialect:
     shortcuts = {}
@@ -678,7 +685,7 @@ class Element:
         """
 
         output = '%s' % (self.name)
-        for key, value in self.attributes.iteritems():
+        for key, value in iteritems(self.attributes):
             output += ' %s="%s"' % (key, value)
         return output
 
@@ -764,7 +771,7 @@ class Element:
         # Make sure <a>'s have a href, <img>'s have an src, etc.
         required = self.parser.dialect.required
 
-        for element, attribs in required.iteritems():
+        for element, attribs in iteritems(required):
             if self.name == element:
                 for attrib in attribs:
                     if attrib not in self.attributes:
@@ -860,7 +867,7 @@ class Token:
         if ':' in name:
             shortcuts = self.parser.dialect.shortcuts
             if name in shortcuts.keys():
-                for key, value in shortcuts[name].iteritems():
+                for key, value in iteritems(shortcuts[name]):
                     setattr(self, key, value)
                 if 'html' in name:
                     return
@@ -972,20 +979,20 @@ class Router:
             return self.parse(str=str, ret=ret)
 
     def help(self):
-        print "Usage: %s [OPTIONS]" % sys.argv[0]
-        print "Expands input into HTML."
-        print ""
+        print("Usage: %s [OPTIONS]" % sys.argv[0])
+        print("Expands input into HTML.")
+        print("")
         for short, long, info in self.options.cmdline_keys:
             if "Deprecated" in info: continue
             if not short == '': short = '-%s,' % short
             if not long  == '': long  = '--%s' % long.replace("=", "=XXX")
 
-            print "%6s %-25s %s" % (short, long, info)
-        print ""
-        print "\n".join(self.help_content)
+            print("%6s %-25s %s" % (short, long, info))
+        print("")
+        print("\n".join(self.help_content))
 
     def version(self):
-        print "Uhm, yeah."
+        print("Uhm, yeah.")
 
     def parse(self, str=None, ret=None):
         self.parser = Parser(self.options)
@@ -1013,8 +1020,8 @@ class Router:
 
         except:
             sys.stderr.write("Parse error. Check your input.\n")
-            print sys.exc_info()[0]
-            print sys.exc_info()[1]
+            print(sys.exc_info()[0])
+            print(sys.exc_info()[1])
 
     def exit(self):
         sys.exit()
@@ -1032,7 +1039,7 @@ class Options:
 
         # `options` can be given as a dict of stuff to preload
         if options:
-            for k, v in options.iteritems():
+            for k, v in iteritems(options):
                 self.options[k] = v
             return
 
@@ -1066,11 +1073,11 @@ class Options:
             elif key[0:1] == '-':
                 for short, long, info in self.cmdline_keys:
                     if short == key[1:]:
-                        print long
+                        print(long)
                         options[long] = True
 
         # Done
-        for k, v in options.iteritems():
+        for k, v in iteritems(options):
             self.options[k] = v
 
     def __getattr__(self, attr):
