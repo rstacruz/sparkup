@@ -115,7 +115,9 @@ function! s:SparkupNext()
     if n == 3
         startinsert!
     else
-        execute 'normal l'
+        let p = getpos(".")
+        let p[2] = p[2] + 1
+        call setpos(".", p)
         startinsert
     endif
 endfunction
