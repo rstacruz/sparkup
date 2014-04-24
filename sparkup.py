@@ -284,7 +284,6 @@ class HtmlDialect(Dialect):
         'object': {'data': '', 'type': ''},
         'param':  {'name': '', 'value': ''},
         'form':   {'action': '', 'method': 'post'},
-        'table':  {'cellspacing': '0'},
         'input':  {'type': '', 'name': '', 'value': ''},
         'base':   {'href': ''},
         'area':   {'shape': '', 'coords': '', 'href': '', 'alt': ''},
