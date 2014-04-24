@@ -35,11 +35,11 @@ class HtmlDialect(Dialect):
         'cc:ie': {
             'opening_tag': '<!--[if IE]>',
             'closing_tag': '<![endif]-->'},
-        'cc:ie6': {
-            'opening_tag': '<!--[if lte IE 6]>',
+        'cc:ie8': {
+            'opening_tag': '<!--[if lte IE 8]>',
             'closing_tag': '<![endif]-->'},
-        'cc:ie7': {
-            'opening_tag': '<!--[if lte IE 7]>',
+        'cc:ie9': {
+            'opening_tag': '<!--[if lte IE 9]>',
             'closing_tag': '<![endif]-->'},
         'cc:noie': {
             'opening_tag': '<!--[if !IE]><!-->',
@@ -203,13 +203,9 @@ class HtmlDialect(Dialect):
             'name': 'link',
             'attributes': { 'rel': 'alternate', 'type': 'application/atom+xml', 'title': 'Atom', 'href': '' },
             },
-        'meta:ie7': {
+        'meta:ieedge': {
             'name': 'meta',
-            'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=7' },
-            },
-        'meta:ie8': {
-            'name': 'meta',
-            'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=8' },
+            'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=edge' },
             },
         'form:get': {
             'name': 'form',
@@ -241,9 +237,11 @@ class HtmlDialect(Dialect):
         'radio': 'input:radio',
         'input:r': 'input:radio',
         'text': 'input:text',
+        'pass': 'input:password',
         'passwd': 'input:password',
         'password': 'input:password',
         'pw': 'input:password',
+        'input': 'input:text',
         'input:t': 'input:text',
         'linkcss': 'link:css',
         'scriptsrc': 'script:src',
