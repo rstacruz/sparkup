@@ -12,7 +12,7 @@ code. It is meant to help you write long HTML blocks in your text editor by lett
 type less characters than needed.
 
 Sparkup is written in Python, and requires Python 2.5 or newer (2.5 is preinstalled in 
-Mac OS X Leopard). Sparkup also offers intregration into common text editors. Support for VIM
+Mac OS X Leopard). Sparkup also offers integration into common text editors. Support for VIM
 and TextMate are currently included.
 
 A short screencast is available here: 
@@ -20,14 +20,19 @@ A short screencast is available here:
 
 Usage and installation
 ----------------------
-You may download Sparkup from Github. [Download the latest version here](http://github.com/rstacruz/sparkup/downloads).
+You may download Sparkup from GitHub. [Download the latest version here](http://github.com/rstacruz/sparkup/downloads).
 
  - **TextMate**: Simply double-click on the `Sparkup.tmbundle` package in Finder. This
-   will install it automatically. In TextMate, open an HTML file (orset the document type to
+   will install it automatically. In TextMate, open an HTML file (or set the document type to
    HTML) type in something (e.g., `#header > h1`), then press `Ctrl` + `E`. Pressing `Tab`
    will cycle through empty elements.
 
- - **VIM**: See the `vim/README.txt` file for details.
+ - **VIM**: See the `vim/README.txt` file for installation. In VIM,
+   create or open an HTML file (or set the filetype to ``html``), type in something (e.g.
+   `#header > h1`), then press `<C-E>` whilst in **insert mode** to expand to HTML.
+   Pressing `<C-n>`  will cycle through empty elements.  Variables specified in 
+   `vim/README.txt` can be used to customise key mappings, and to add **normal mode** mappings
+   as well.
 
  - **Others/command line use**: You may put `sparkup` in your `$PATH` somewhere. You may then
    invoke it by typing `echo "(input here)" | sparkup`, or `sparkup --help` for a list of commands.
@@ -43,10 +48,10 @@ This project is inspired by [Zen Coding](http://code.google.com/p/zen-coding/) o
 
 The following people have contributed code to the project:
 
- - Guillermo O. Freschi (Tordek @ github)
+ - Guillermo O. Freschi (Tordek @ GitHub)
    Bugfixes to the parsing system
 
- - Eric Van Dewoestine (ervandew @ github)
+ - Eric Van Dewoestine (ervandew @ GitHub)
    Improvements to the VIM plugin
 
 Examples

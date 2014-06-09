@@ -1,8 +1,10 @@
 " Sparkup
 " Installation:
-"    Copy the contents of vim/ftplugin/ to your ~/.vim/ftplugin directory.
+"    Copy the contents of vim/ftplugin/ to your ~/.vim/ftplugin directory:
 "
 "        $ cp -R vim/ftplugin ~/.vim/ftplugin/
+"
+"    or use one of the automated methods specified in the README.txt file.
 "
 " Configuration:
 "   g:sparkup (Default: 'sparkup') -
@@ -13,16 +15,20 @@
 "     Additional args passed to sparkup.
 "
 "   g:sparkupExecuteMapping (Default: '<c-e>') -
-"     Mapping used to execute sparkup.
+"     Mapping used to execute sparkup within insert mode.
 "
 "   g:sparkupNextMapping (Default: '<c-n>') -
-"     Mapping used to jump to the next empty tag/attribute.
+"     Mapping used to jump to the next empty tag/attribute within insert mode.
 "
 "   g:sparkupMaps (Default: 1) -
-"     Setup mappings?
+"     Set up automatic mappings for Sparkup. If set to 0, this can be
+"     used to disable creation of any mappings, which is useful if
+"     full customisation is required.
 "
 "   g:sparkupMapsNormal (Default: 0) -
-"     Setup mappings for normal mode?
+"     Set up mappings for normal mode within Vim. The same execute and next
+"     mappings configured above will apply to normal mode if this option is
+"     set.
 
 if !exists('g:sparkupExecuteMapping')
   let g:sparkupExecuteMapping = '<c-e>'
