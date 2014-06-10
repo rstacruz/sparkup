@@ -285,7 +285,6 @@ class HtmlDialect(Dialect):
         'param':  {'name': '', 'value': ''},
         'form':   {'action': '', 'method': 'post'},
         'input':  {'type': '', 'name': '', 'value': ''},
-        'base':   {'href': ''},
         'area':   {'shape': '', 'coords': '', 'href': '', 'alt': ''},
         'select': {'name': ''},
         'option': {'value': ''},
