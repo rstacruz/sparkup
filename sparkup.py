@@ -267,7 +267,7 @@ class HtmlDialect(Dialect):
         'jssrc': 'script:src',
         }
     short_tags = (
-        'area', 'base', 'basefont', 'br', 'embed', 'hr', \
+        'area', 'base', 'basefont', 'br', 'embed', 'hr',
         'input', 'img', 'link', 'param', 'meta')
     required = {
         'a':      {'href':''},
@@ -501,8 +501,8 @@ class Element:
     """An element.
     """
 
-    def __init__(self, token=None, parent=None, count=None, local_count=None, \
-                 parser=None, opening_tag=None, closing_tag=None, \
+    def __init__(self, token=None, parent=None, count=None, local_count=None,
+                 parser=None, opening_tag=None, closing_tag=None,
                  attributes=None, name=None, text=None):
         """Constructor.
 
@@ -596,7 +596,7 @@ class Element:
         guide = ''
         start_guide = ''
         end_guide = ''
-        if ((self.name == 'div') and \
+        if ((self.name == 'div') and
             (('id' in self.attributes) or ('class' in self.attributes))):
 
             if (self.parser.options.has('post-tag-guides')):
@@ -661,9 +661,9 @@ class Element:
             self.opening_tag is not None or \
             self.closing_tag is not None:
             output = "%s%s%s%s%s%s%s%s" % \
-                (start_guide, indent, self.get_opening_tag(), \
-                self.text, \
-                self.get_closing_tag(), \
+                (start_guide, indent, self.get_opening_tag(),
+                self.text,
+                self.get_closing_tag(),
                 guide, end_guide, "\n")
 
         # Else, it's an empty-named element (like the root). Pass.
