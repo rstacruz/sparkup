@@ -3,6 +3,7 @@
 import sys
 import sparkup
 
+
 class SparkupTest:
     options = {
         'textmate': True,
@@ -118,13 +119,17 @@ class SparkupTest:
         """Run Forrest run!"""
         failures = 0
 
-        print "Test results:"
+        print("Test results:")
         for name, case in self.cases.iteritems():
-            try:    options_key = case['options']
-            except: options_key = 'default'
+            try:
+                options_key = case['options']
+            except:
+                options_key = 'default'
 
-            try:    options = self.options[options_key]
-            except: options = self.options['default']
+            try:
+                options = self.options[options_key]
+            except:
+                options = self.options['default']
 
             # Output buffer
             r = sparkup.Router()
@@ -134,19 +139,21 @@ class SparkupTest:
 
             # Did it work?
             result = output == case['output']
-            if result: result_str = " OK "
-            else:      result_str = "FAIL"
+            if result:
+                result_str = " OK "
+            else:
+                result_str = "FAIL"
 
-            print " - %-30s [%s]" % (name, result_str)
+            print(" - %-30s [%s]" % (name, result_str))
             if not result:
                 failures += 1
-                print "= %s" % input.replace("\n", "\n= ")
-                print "Actual output (condensed):"
-                print " | '%s'" % output.replace("\n", r"\n").replace('"', '\"')
-                print "Actual output:"
-                print " | %s" % output.replace("\n", "\n | ")
-                print "Expected:"
-                print " | %s" % case['output'].replace("\n", "\ n| ")
+                print("= %s" % input.replace("\n", "\n= "))
+                print("Actual output (condensed):")
+                print(" | '%s'" % output.replace("\n", r"\n").replace('"', '\"'))
+                print("Actual output:")
+                print(" | %s" % output.replace("\n", "\n | "))
+                print("Expected:")
+                print(" | %s" % case['output'].replace("\n", "\ n| "))
 
         return failures
 
