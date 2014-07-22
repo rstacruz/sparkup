@@ -12,7 +12,8 @@ class SparkupTest:
         }
     options = {
         'default': {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True},
-        'guides':  {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'start-guide-format': 'Begin %s'}
+        'guides':  {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'start-guide-format': 'Begin %s'},
+        'namespaced-elements': {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'namespaced-elements': True }
         }
     cases = {
         'Simple test': {
@@ -90,7 +91,7 @@ class SparkupTest:
             },
         'Expand test': {
             'input': 'p#menu > table+ + ul',
-            'output': '<p id="menu">\n    <table cellspacing="0">\n        <tr>\n            <td>$1</td>\n        </tr>\n    </table>\n    <ul>$2</ul>\n</p>$0'
+            'output': '<p id="menu">\n    <table>\n        <tr>\n            <td>$1</td>\n        </tr>\n    </table>\n    <ul>$2</ul>\n</p>$0'
             },
         'Text with dot test': {
             'input': 'p { text.com }',
@@ -111,6 +112,15 @@ class SparkupTest:
         'Nested curly braces test (#54)': {
             'input': 'html>head>title{${title}}',
             'output': '<html>\n    <head>\n        <title>${title}</title>\n    </head>\n</html>$0'
+            },
+        'HTML component element with dash test': {
+            'input': 'my-html-component',
+            'output': '<my-html-component>$1</my-html-component>$0' 
+            },
+        'XML namespaced element': {
+            'options': 'namespaced-elements',
+            'input': 'namespaced-ul',
+            'output': '<namespaced:ul>$1</namespaced:ul>$0'
             },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }

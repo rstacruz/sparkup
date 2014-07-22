@@ -853,7 +853,8 @@ class Token:
 
         # Get the tag name. Default to DIV if none given.
         name = re.findall('^([\w\-:]*)', self.str)[0]
-        name = name.lower().replace('-', ':')
+        if self.parser.options.options['namespaced-elements'] == True:
+            name = name.lower().replace('-', ':')
 
         # Find synonyms through this thesaurus
         synonyms = self.parser.dialect.synonyms
@@ -1088,7 +1089,8 @@ class Options:
         except: return False
 
     options = {
-        'indent-spaces': 4
+        'indent-spaces': 4,
+        'namespaced-elements': False,
     }
     cmdline_keys = [
         ('h', 'help', 'Shows help'),
