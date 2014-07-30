@@ -8,6 +8,7 @@ import re
 
 # =============================================================================
 
+
 def iteritems(obj):
     """iteritems() in python2 and items() in python3"""
     if sys.version[0] == '2':
@@ -15,17 +16,20 @@ def iteritems(obj):
     else:
         return obj.items()
 
+
 class Dialect:
     shortcuts = {}
     synonyms = {}
     required = {}
     short_tags = ()
 
+
 class XmlDialect(Dialect):
     shortcuts = {}
     synonyms = {}
     short_tags = ()
     required = {}
+
 
 class HtmlDialect(Dialect):
     # TODO: the indentation in snippets should also be based on the user's
@@ -292,6 +296,7 @@ class HtmlDialect(Dialect):
         'meta':   {'content': ''},
     }
 
+
 class Parser:
     """The parser.
     """
@@ -428,9 +433,9 @@ class Parser:
                         count += 1
                         local_count += 1
                         new = Element(token, caret,
-                                count = count,
-                                local_count = local_count,
-                                parser = self)
+                                      count = count,
+                                      local_count = local_count,
+                                      parser = self)
                         self._last.append(new)
                         caret.append(new)
 
@@ -496,6 +501,7 @@ class Parser:
 
 # =============================================================================
 
+
 class Element:
     """An element.
     """
@@ -546,9 +552,12 @@ class Element:
                 self.attributes[key] = attrib
 
         # Copy over from parameters
-        if attributes: self.attributes = attributes
-        if name:       self.name       = name
-        if text:       self.text       = text
+        if attributes:
+            self.attributes = attributes
+        if name:
+            self.name = name
+        if text:
+            self.text = text
 
         self._fill_attributes()
 
@@ -566,23 +575,30 @@ class Element:
 
         output = ""
 
-        try:    tabs = bool(self.parser.options.options['indent-tabs'])
-        except: tabs = False
+        try:
+            tabs = bool(self.parser.options.options['indent-tabs'])
+        except:
+            tabs = False
 
         if tabs:
             spaces = '\t'
         else:
-            try:    spaces_count = int(self.parser.options.options['indent-spaces'])
-            except: spaces_count = 4
+            try:
+                spaces_count = int(self.parser.options.options['indent-spaces'])
+            except:
+                spaces_count = 4
             spaces = ' ' * spaces_count
 
         indent = self.depth * spaces
 
         prefix, suffix = ('', '')
-        if self.prefix: prefix = self.prefix + "\n"
-        if self.suffix: suffix = self.suffix
+        if self.prefix:
+            prefix = self.prefix + "\n"
+        if self.suffix:
+            suffix = self.suffix
 
-        # Make the guide from the ID (/#header), or the class if there's no ID (/.item)
+        # Make the guide from the ID (/#header),
+        # or the class if there's no ID (/.item).
         # This is for the start-guide, end-guide and post-tag-guides
         guide_str = ''
         if 'id' in self.attributes:
@@ -595,22 +611,26 @@ class Element:
         guide = ''
         start_guide = ''
         end_guide = ''
-        if ((self.name == 'div') and
-            (('id' in self.attributes) or ('class' in self.attributes))):
+        if self.name == 'div' and \
+            'id' in self.attributes or 'class' in self.attributes:
 
-            if (self.parser.options.has('post-tag-guides')):
+            if self.parser.options.has('post-tag-guides'):
                 guide = "<!-- /%s -->" % guide_str
 
-            if (self.parser.options.has('start-guide-format')):
+            if self.parser.options.has('start-guide-format'):
                 format = self.parser.options.get('start-guide-format')
-                try:    start_guide = format % guide_str
-                except: start_guide = (format + " " + guide_str).strip()
+                try:
+                    start_guide = format % guide_str
+                except:
+                    start_guide = (format + " " + guide_str).strip()
                 start_guide = "%s<!-- %s -->\n" % (indent, start_guide)
 
-            if (self.parser.options.has('end-guide-format')):
+            if self.parser.options.has('end-guide-format'):
                 format = self.parser.options.get('end-guide-format')
-                try:    end_guide = format % guide_str
-                except: end_guide = (format + " " + guide_str).strip()
+                try:
+                    end_guide = format % guide_str
+                except:
+                    end_guide = (format + " " + guide_str).strip()
                 end_guide = "\n%s<!-- %s -->" % (indent, end_guide)
 
         # Short, self-closing tags (<br />)
@@ -619,7 +639,7 @@ class Element:
         # When it should be expanded..
         # (That is, <div>\n...\n</div> or similar -- wherein something must go
         # inside the opening/closing tags)
-        if  len(self.children) > 0 \
+        if len(self.children) > 0 \
             or self.expand \
             or prefix or suffix \
             or (self.parser.options.has('expand-divs') and self.name == 'div'):
@@ -629,7 +649,8 @@ class Element:
 
             # For expand divs: if there are no children (that is, `output`
             # is still blank despite above), fill it with a blank line.
-            if (output == ''): output = indent + spaces + "\n"
+            if output == '':
+                output = indent + spaces + "\n"
 
             # If we're a root node and we have a prefix or suffix...
             # (Only the root node can have a prefix or suffix.)
@@ -819,6 +840,7 @@ class Element:
 
 # =============================================================================
 
+
 class Token:
     def __init__(self, str, parser=None):
         """Token.
@@ -870,8 +892,10 @@ class Token:
             else:
                 self.name = name
 
-        elif (name == ''): self.name = 'div'
-        else: self.name = name
+        elif name == '':
+            self.name = 'div'
+        else:
+            self.name = name
 
         # Look for attributes
         attribs = []
@@ -880,8 +904,10 @@ class Token:
             self.str = self.str.replace("[" + attrib + "]", "")
         if len(attribs) > 0:
             for attrib in attribs:
-                try:    key, value = attrib.split('=', 1)
-                except: key, value = attrib, ''
+                try:
+                    key, value = attrib.split('=', 1)
+                except:
+                    key, value = attrib, ''
                 self.attributes[key] = value
 
         # Try looking for text
@@ -896,29 +922,36 @@ class Token:
         for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
             classes.append(classname)
         if len(classes) > 0:
-            try:    self.attributes['class']
-            except: self.attributes['class'] = ''
+            try:
+                self.attributes['class']
+            except:
+                self.attributes['class'] = ''
             self.attributes['class'] += ' ' + ' '.join(classes)
             self.attributes['class'] = self.attributes['class'].strip()
 
         # Get the ID
         id = None
-        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.str): pass
+        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.str):
+            pass
         if id is not None:
             self.attributes['id'] = id
 
         # See if there's a multiplier (e.g., "li*3")
         multiplier = None
-        for multiplier in re.findall('\*\s*([0-9]+)', self.str): pass
+        for multiplier in re.findall('\*\s*([0-9]+)', self.str):
+            pass
         if multiplier is not None:
             self.multiplier = int(multiplier)
 
         # Populate flag (e.g., ul+)
         flags = None
-        for flags in re.findall('[\+\!]+$', self.str): pass
+        for flags in re.findall('[\+\!]+$', self.str):
+            pass
         if flags is not None:
-            if '+' in flags: self.populate = True
-            if '!' in flags: self.expand = True
+            if '+' in flags:
+                self.populate = True
+            if '!' in flags:
+                self.expand = True
 
     def __str__(self):
         return self.str
@@ -946,6 +979,7 @@ class Token:
 
 # =============================================================================
 
+
 class Router:
     """The router.
     """
@@ -960,15 +994,15 @@ class Router:
     # -------------------------------------------------------------------------
 
     def start(self, options=None, str=None, ret=None):
-        if (options):
+        if options:
             self.options = Options(router=self, options=options, argv=None)
         else:
             self.options = Options(router=self, argv=sys.argv[1:], options=None)
 
-        if (self.options.has('help')):
+        if self.options.has('help'):
             return self.help()
 
-        elif (self.options.has('version')):
+        elif self.options.has('version'):
             return self.version()
 
         else:
@@ -980,8 +1014,10 @@ class Router:
         print("")
         for short, long, info in self.options.cmdline_keys:
             if "Deprecated" in info: continue
-            if not short == '': short = '-%s,' % short
-            if not long  == '': long  = '--%s' % long.replace("=", "=XXX")
+            if not short == '':
+                short = '-%s,' % short
+            if not long == '':
+                long = '--%s' % long.replace("=", "=XXX")
 
             print("%6s %-25s %s" % (short, long, info))
         print("")
@@ -1011,7 +1047,8 @@ class Router:
         try:
             self.parser.load_string(lines)
             output = self.parser.render()
-            if ret: return output
+            if ret:
+                return output
             sys.stdout.write(output)
 
         except:
@@ -1028,6 +1065,7 @@ class Router:
 
 # =============================================================================
 
+
 class Options:
     def __init__(self, router, argv, options=None):
         # Init self
@@ -1041,7 +1079,7 @@ class Options:
 
         # Prepare for getopt()
         short_keys, long_keys = "", []
-        for short, long, info in self.cmdline_keys: # 'v', 'version'
+        for short, long, info in self.cmdline_keys:     # 'v', 'version'
             short_keys += short
             long_keys.append(long)
 
@@ -1057,8 +1095,9 @@ class Options:
         # Sort them out into options
         options = {}
         for option in getoptions:
-            key, value = option # '--version', ''
-            if (value == ''): value = True
+            key, value = option     # '--version', ''
+            if value == '':
+                value = True
 
             # If the key is long, write it
             if key[0:2] == '--':
@@ -1080,12 +1119,16 @@ class Options:
         return self.get(attr)
 
     def get(self, attr):
-        try:    return self.options[attr]
-        except: return None
+        try:
+            return self.options[attr]
+        except:
+            return None
 
     def has(self, attr):
-        try:    return self.options.has_key(attr)
-        except: return False
+        try:
+            return self.options.has_key(attr)
+        except:
+            return False
 
     options = {
         'indent-spaces': 4
@@ -1100,10 +1143,10 @@ class Options:
         ('', 'indent-tabs', 'Indent with tabs'),
         ('', 'expand-divs', 'Automatically expand divs'),
         ('', 'no-last-newline', 'Skip the trailing newline'),
-        ('', 'start-guide-format=', 'To be documented'), # << TODO
-        ('', 'end-guide-format=', 'To be documented'),   # << TODO
+        ('', 'start-guide-format=', 'To be documented'),        # << TODO
+        ('', 'end-guide-format=', 'To be documented'),      # << TODO
         ('', 'xml', 'Skip html attribute fillings'),
-        ('', 'no-html5-self-closing', 'Use HTML4 <br /> instead of HTML5 <br>'),
+        ('', 'no-html5-self-closing', 'Use HTML4 <br /> instead of HTML5 <br>')
     ]
 
     # Property: router
