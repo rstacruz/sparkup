@@ -659,9 +659,12 @@ class Element:
         elif self.name != '' or \
             self.opening_tag is not None or \
             self.closing_tag is not None:
+            between_tags = self.text
+            if self.parser.options.has('open-empty-tags'):
+                between_tags += "\n\n" + indent
             output = "%s%s%s%s%s%s%s%s" % \
                 (start_guide, indent, self.get_opening_tag(),
-                self.text,
+                between_tags,
                 self.get_closing_tag(),
                 guide, end_guide, "\n")
 
@@ -1104,6 +1107,7 @@ class Options:
         ('', 'end-guide-format=', 'To be documented'),   # << TODO
         ('', 'xml', 'Skip html attribute fillings'),
         ('', 'no-html5-self-closing', 'Use HTML4 <br /> instead of HTML5 <br>'),
+        ('', 'open-empty-tags', 'leaves an empty space between empty tags instead of leaving them on one line'),
     ]
 
     # Property: router
