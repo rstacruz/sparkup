@@ -165,11 +165,11 @@ class HtmlDialect(Dialect):
             },
         'script:jquery': {
             'name': 'script',
-            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js' }
+            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' }
             },
         'script:jquery2': {
             'name': 'script',
-            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js' }
+            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js' }
             },
         'script:jsapi': {
             'name': 'script',
