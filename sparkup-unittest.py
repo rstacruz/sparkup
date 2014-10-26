@@ -106,7 +106,7 @@ class SparkupTest:
             },
         'Eruby tag test': {
             'input': 'erb:p',
-            'output': '<%= $1 %>$0',
+            'output': '<%=  %>$0',
             },
         'ERB block test': {
             'input': 'erb:b',

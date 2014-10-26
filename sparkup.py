@@ -50,16 +50,16 @@ class HtmlDialect(Dialect):
             'closing_tag': '?>',
             },
         'erb:p': {
-            'opening_tag' : '<%= $1',
-            'closing_tag' : ' %>',
+            'opening_tag': '<%= ',
+            'closing_tag': ' %>',
             },
         'erb:c': {
-            'opening_tag' : '%<# $1',
-            'closing_tag' : ' %>',
+            'opening_tag': '%<# ',
+            'closing_tag': ' %>',
             },
         'erb:d': {
-            'opening_tag' : '<% $1',
-            'closing_tag' : ' %>',
+            'opening_tag': '<% ',
+            'closing_tag': ' %>',
             },
         'erb:b': {
             'expand': True,
