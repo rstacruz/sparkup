@@ -104,6 +104,14 @@ class SparkupTest:
             'input': 'php',
             'output': '<?php\n    $1\n?>$0',
             },
+        'Eruby tag test': {
+            'input': 'erb:p',
+            'output': '<%=  %>$0',
+            },
+        'ERB block test': {
+            'input': 'erb:b',
+            'output': '<% $2 %>\n    $1\n<% end %>$0'
+            },
         'Nested curly braces test': {
             'input': 'p{{{ title }}}',
             'output': '<p>{{ title }}</p>$0'
