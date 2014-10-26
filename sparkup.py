@@ -49,7 +49,7 @@ class HtmlDialect(Dialect):
             'opening_tag': '<?php',
             'closing_tag': '?>',
             },
-        'erb:a': {
+        'erb:p': {
             'opening_tag' : '<%= $1',
             'closing_tag' : ' %>',
             },
@@ -58,8 +58,18 @@ class HtmlDialect(Dialect):
             'closing_tag' : ' %>',
             },
         'erb:d': {
-            'opening_tag' : '<%- $1',
+            'opening_tag' : '<% $1',
             'closing_tag' : ' %>',
+            },
+        'erb:b': {
+            'expand': True,
+            'opening_tag' : '<% $2 %>',
+            'closing_tag' : '<% end %>',
+            },
+        'erb:bp': {
+            'expand': True,
+            'opening_tag' : '<%= $2 %>',
+            'closing_tag' : '<% end %>',
             },
         'html:4t': {
             'expand': True,
