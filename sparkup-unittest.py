@@ -12,7 +12,8 @@ class SparkupTest:
         }
     options = {
         'default': {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True},
-        'guides':  {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'start-guide-format': 'Begin %s'}
+        'guides':  {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'start-guide-format': 'Begin %s'},
+        'namespaced-elements': {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'namespaced-elements': True }
         }
     cases = {
         'Simple test': {
@@ -119,6 +120,15 @@ class SparkupTest:
         'Nested curly braces test (#54)': {
             'input': 'html>head>title{${title}}',
             'output': '<html>\n    <head>\n        <title>${title}</title>\n    </head>\n</html>$0'
+            },
+        'HTML component element with dash test': {
+            'input': 'my-html-component',
+            'output': '<my-html-component>$1</my-html-component>$0' 
+            },
+        'XML namespaced element': {
+            'options': 'namespaced-elements',
+            'input': 'namespaced-ul',
+            'output': '<namespaced:ul>$1</namespaced:ul>$0'
             },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
