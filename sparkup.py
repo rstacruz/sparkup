@@ -28,265 +28,292 @@ class XmlDialect(Dialect):
     required = {}
 
 class HtmlDialect(Dialect):
-    # TODO: the indentation in snippets should also be based on the user's
-    # indentation configuration
+    # Constructor, accepts an indent which should come from an Options object
+    # so it integrates well with their editing environment.
+    def __init__(self, indent=4):
+        self.indent = indent
 
-    shortcuts = {
-        'cc:ie': {
-            'opening_tag': '<!--[if IE]>',
-            'closing_tag': '<![endif]-->'},
-        'cc:ie8': {
-            'opening_tag': '<!--[if lte IE 8]>',
-            'closing_tag': '<![endif]-->'},
-        'cc:ie9': {
-            'opening_tag': '<!--[if lte IE 9]>',
-            'closing_tag': '<![endif]-->'},
-        'cc:noie': {
-            'opening_tag': '<!--[if !IE]><!-->',
-            'closing_tag': '<!--<![endif]-->'},
-        'php:t': {
-            'expand': True,
-            'opening_tag': '<?php',
-            'closing_tag': '?>',
-            },
-        'erb:p': {
-            'opening_tag': '<%= ',
-            'closing_tag': ' %>',
-            },
-        'erb:c': {
-            'opening_tag': '%<# ',
-            'closing_tag': ' %>',
-            },
-        'erb:d': {
-            'opening_tag': '<% ',
-            'closing_tag': ' %>',
-            },
-        'erb:b': {
-            'expand': True,
-            'opening_tag' : '<% $2 %>',
-            'closing_tag' : '<% end %>',
-            },
-        'erb:bp': {
-            'expand': True,
-            'opening_tag' : '<%= $2 %>',
-            'closing_tag' : '<% end %>',
-            },
-        'html:4t': {
-            'expand': True,
-            'opening_tag':
-                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">\n' +
-                '<html lang="en">\n' +
-                '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' +
-                '</head>\n' +
-                '<body>',
-            'closing_tag':
-                '</body>\n' +
-                '</html>'},
-        'html:4s': {
-            'expand': True,
-            'opening_tag':
-                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\n' +
-                '<html lang="en">\n' +
-                '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' +
-                '</head>\n' +
-                '<body>',
-            'closing_tag':
-                '</body>\n' +
-                '</html>'},
-        'html:xt': {
-            'expand': True,
-            'opening_tag':
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n' +
-                '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
-                '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' +
-                '</head>\n' +
-                '<body>',
-            'closing_tag':
-                '</body>\n' +
-                '</html>'},
-        'html:xs': {
-            'expand': True,
-            'opening_tag':
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' +
-                '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
-                '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' +
-                '</head>\n' +
-                '<body>',
-            'closing_tag':
-                '</body>\n' +
-                '</html>'},
-        'html:xxs': {
-            'expand': True,
-            'opening_tag':
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n' +
-                '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
-                '<head>\n' +
-                '    ' + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
-                '    ' + '<title></title>\n' +
-                '</head>\n' +
-                '<body>',
-            'closing_tag':
-                '</body>\n' +
-                '</html>'},
-        'html:5': {
-            'expand': True,
-            'opening_tag':
-                '<!DOCTYPE html>\n' +
-                '<html lang="en">\n' +
-                '<head>\n' +
-                '    ' + '<meta charset="UTF-8">\n' +
-                '    ' + '<title></title>\n' +
-                '</head>\n' +
-                '<body>',
-            'closing_tag':
-                '</body>\n' +
-                '</html>'},
-        'input:button': {
-            'name': 'input',
-            'attributes': { 'class': 'button', 'type': 'button', 'name': '', 'value': '' }
-            },
-        'input:password': {
-            'name': 'input',
-            'attributes': { 'class': 'text password', 'type': 'password', 'name': '', 'value': '' }
-            },
-        'input:radio': {
-            'name': 'input',
-            'attributes': { 'class': 'radio', 'type': 'radio', 'name': '', 'value': '' }
-            },
-        'input:checkbox': {
-            'name': 'input',
-            'attributes': { 'class': 'checkbox', 'type': 'checkbox', 'name': '', 'value': '' }
-            },
-        'input:file': {
-            'name': 'input',
-            'attributes': { 'class': 'file', 'type': 'file', 'name': '', 'value': '' }
-            },
-        'input:text': {
-            'name': 'input',
-            'attributes': { 'class': 'text', 'type': 'text', 'name': '', 'value': '' }
-            },
-        'input:submit': {
-            'name': 'input',
-            'attributes': { 'class': 'submit', 'type': 'submit', 'value': '' }
-            },
-        'input:hidden': {
-            'name': 'input',
-            'attributes': { 'type': 'hidden', 'name': '', 'value': '' }
-            },
-        'script:src': {
-            'name': 'script',
-            'attributes': { 'src': '' }
-            },
-        'script:jquery': {
-            'name': 'script',
-            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' }
-            },
-        'script:jquery2': {
-            'name': 'script',
-            'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js' }
-            },
-        'script:jsapi': {
-            'name': 'script',
-            'attributes': { 'src': 'http://www.google.com/jsapi' }
-            },
-        'script:jsapix': {
-            'name': 'script',
-            'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
-            },
-        'link:css': {
-            'name': 'link',
-            'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
-            },
-        'link:print': {
-            'name': 'link',
-            'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'print' },
-            },
-        'link:favicon': {
-            'name': 'link',
-            'attributes': { 'rel': 'shortcut icon', 'type': 'image/x-icon', 'href': '' },
-            },
-        'link:touch': {
-            'name': 'link',
-            'attributes': { 'rel': 'apple-touch-icon', 'href': '' },
-            },
-        'link:rss': {
-            'name': 'link',
-            'attributes': { 'rel': 'alternate', 'type': 'application/rss+xml', 'title': 'RSS', 'href': '' },
-            },
-        'link:atom': {
-            'name': 'link',
-            'attributes': { 'rel': 'alternate', 'type': 'application/atom+xml', 'title': 'Atom', 'href': '' },
-            },
-        'meta:ieedge': {
-            'name': 'meta',
-            'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=edge' },
-            },
-        'form:get': {
-            'name': 'form',
-            'attributes': { 'method': 'get' },
-            },
-        'form:g': {
-            'name': 'form',
-            'attributes': { 'method': 'get' },
-            },
-        'form:post': {
-            'name': 'form',
-            'attributes': { 'method': 'post' },
-            },
-        'form:p': {
-            'name': 'form',
-            'attributes': { 'method': 'post' },
-            },
-        }
-    synonyms = {
-        'php': 'php:t',
-        'checkbox': 'input:checkbox',
-        'check': 'input:checkbox',
-        'input:c': 'input:checkbox',
-        'input:b': 'input:button',
-        'input:h': 'input:hidden',
-        'hidden': 'input:hidden',
-        'submit': 'input:submit',
-        'input:s': 'input:submit',
-        'radio': 'input:radio',
-        'input:r': 'input:radio',
-        'text': 'input:text',
-        'pass': 'input:password',
-        'passwd': 'input:password',
-        'password': 'input:password',
-        'pw': 'input:password',
-        'input': 'input:text',
-        'input:t': 'input:text',
-        'linkcss': 'link:css',
-        'scriptsrc': 'script:src',
-        'jquery': 'script:jquery',
-        'jsapi': 'script:jsapi',
-        'html5': 'html:5',
-        'html4': 'html:4s',
-        'html4s': 'html:4s',
-        'html4t': 'html:4t',
-        'xhtml': 'html:xxs',
-        'xhtmlt': 'html:xt',
-        'xhtmls': 'html:xs',
-        'xhtml11': 'html:xxs',
-        'opt': 'option',
-        'st': 'strong',
-        'css': 'style',
-        'csss': 'link:css',
-        'css:src': 'link:css',
-        'csssrc': 'link:css',
-        'js': 'script',
-        'jss': 'script:src',
-        'js:src': 'script:src',
-        'jssrc': 'script:src',
+        self.shortcuts = {
+            'cc:ie': {
+                'opening_tag': '<!--[if IE]>',
+                'closing_tag': '<![endif]-->'},
+            'cc:ie8': {
+                'opening_tag': '<!--[if lte IE 8]>',
+                'closing_tag': '<![endif]-->'},
+            'cc:ie9': {
+                'opening_tag': '<!--[if lte IE 9]>',
+                'closing_tag': '<![endif]-->'},
+            'cc:noie': {
+                'opening_tag': '<!--[if !IE]><!-->',
+                'closing_tag': '<!--<![endif]-->'},
+            'php:t': {
+                'expand': True,
+                'opening_tag': '<?php',
+                'closing_tag': '?>',
+                },
+            'erb:p': {
+                'opening_tag': '<%= ',
+                'closing_tag': ' %>',
+                },
+            'erb:c': {
+                'opening_tag': '%<# ',
+                'closing_tag': ' %>',
+                },
+            'erb:d': {
+                'opening_tag': '<% ',
+                'closing_tag': ' %>',
+                },
+            'erb:b': {
+                'expand': True,
+                'opening_tag' : '<% $2 %>',
+                'closing_tag' : '<% end %>',
+                },
+            'erb:bp': {
+                'expand': True,
+                'opening_tag' : '<%= $2 %>',
+                'closing_tag' : '<% end %>',
+                },
+            'html:4t': {
+                'expand': True,
+                'opening_tag':
+                    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">\n' +
+                    '<html lang="en">\n' +
+                    '<head>\n' +
+                    (' ' * self.indent) + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                    (' ' * self.indent) + '<title></title>\n' +
+                    '</head>\n' +
+                    '<body>',
+                'closing_tag':
+                    '</body>\n' +
+                    '</html>'},
+            'html:4s': {
+                'expand': True,
+                'opening_tag':
+                    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\n' +
+                    '<html lang="en">\n' +
+                    '<head>\n' +
+                    (' ' * self.indent) + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                    (' ' * self.indent) + '<title></title>\n' +
+                    '</head>\n' +
+                    '<body>',
+                'closing_tag':
+                    '</body>\n' +
+                    '</html>'},
+            'html:xt': {
+                'expand': True,
+                'opening_tag':
+                    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n' +
+                    '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
+                    '<head>\n' +
+                    (' ' * self.indent) + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                    (' ' * self.indent) + '<title></title>\n' +
+                    '</head>\n' +
+                    '<body>',
+                'closing_tag':
+                    '</body>\n' +
+                    '</html>'},
+            'html:xs': {
+                'expand': True,
+                'opening_tag':
+                    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' +
+                    '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
+                    '<head>\n' +
+                    (' ' * self.indent) + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                    (' ' * self.indent) + '<title></title>\n' +
+                    '</head>\n' +
+                    '<body>',
+                'closing_tag':
+                    '</body>\n' +
+                    '</html>'},
+            'html:xxs': {
+                'expand': True,
+                'opening_tag':
+                    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n' +
+                    '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n' +
+                    '<head>\n' +
+                    (' ' * self.indent) + '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />\n' +
+                    (' ' * self.indent) + '<title></title>\n' +
+                    '</head>\n' +
+                    '<body>',
+                'closing_tag':
+                    '</body>\n' +
+                    '</html>'},
+            'html:5': {
+                'expand': True,
+                'opening_tag':
+                    '<!DOCTYPE html>\n' +
+                    '<html lang="en">\n' +
+                    '<head>\n' +
+                    (' ' * self.indent) + '<meta charset="UTF-8">\n' +
+                    (' ' * self.indent) + '<title></title>\n' +
+                    '</head>\n' +
+                    '<body>',
+                'closing_tag':
+                    '</body>\n' +
+                    '</html>'},
+            'input:button': {
+                'name': 'input',
+                'attributes': { 'class': 'button', 'type': 'button', 'name': '', 'value': '' }
+                },
+            'input:password': {
+                'name': 'input',
+                'attributes': { 'class': 'text password', 'type': 'password', 'name': '', 'value': '' }
+                },
+            'input:radio': {
+                'name': 'input',
+                'attributes': { 'class': 'radio', 'type': 'radio', 'name': '', 'value': '' }
+                },
+            'input:checkbox': {
+                'name': 'input',
+                'attributes': { 'class': 'checkbox', 'type': 'checkbox', 'name': '', 'value': '' }
+                },
+            'input:file': {
+                'name': 'input',
+                'attributes': { 'class': 'file', 'type': 'file', 'name': '', 'value': '' }
+                },
+            'input:text': {
+                'name': 'input',
+                'attributes': { 'class': 'text', 'type': 'text', 'name': '', 'value': '' }
+                },
+            'input:submit': {
+                'name': 'input',
+                'attributes': { 'class': 'submit', 'type': 'submit', 'value': '' }
+                },
+            'input:hidden': {
+                'name': 'input',
+                'attributes': { 'type': 'hidden', 'name': '', 'value': '' }
+                },
+            'script:src': {
+                'name': 'script',
+                'attributes': { 'src': '' }
+                },
+            'script:jquery': {
+                'name': 'script',
+                'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' }
+                },
+            'script:jquery2': {
+                'name': 'script',
+                'attributes': { 'src': 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js' }
+                },
+            'script:jsapi': {
+                'name': 'script',
+                'attributes': { 'src': 'http://www.google.com/jsapi' }
+                },
+            'script:jsapix': {
+                'name': 'script',
+                'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
+                },
+            'link:css': {
+                'name': 'link',
+                'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
+                },
+            'link:print': {
+                'name': 'link',
+                'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'print' },
+                },
+            'link:favicon': {
+                'name': 'link',
+                'attributes': { 'rel': 'shortcut icon', 'type': 'image/x-icon', 'href': '' },
+                },
+            'link:touch': {
+                'name': 'link',
+                'attributes': { 'rel': 'apple-touch-icon', 'href': '' },
+                },
+            'link:rss': {
+                'name': 'link',
+                'attributes': { 'rel': 'alternate', 'type': 'application/rss+xml', 'title': 'RSS', 'href': '' },
+                },
+            'link:atom': {
+                'name': 'link',
+                'attributes': { 'rel': 'alternate', 'type': 'application/atom+xml', 'title': 'Atom', 'href': '' },
+                },
+            'meta:ieedge': {
+                'name': 'meta',
+                'attributes': { 'http-equiv': 'X-UA-Compatible', 'content': 'IE=edge' },
+                },
+            'form:get': {
+                'name': 'form',
+                'attributes': { 'method': 'get' },
+                },
+            'form:g': {
+                'name': 'form',
+                'attributes': { 'method': 'get' },
+                },
+            'form:post': {
+                'name': 'form',
+                'attributes': { 'method': 'post' },
+                },
+            'form:p': {
+                'name': 'form',
+                'attributes': { 'method': 'post' },
+                },
+            }
+        self.synonyms = {
+            'php': 'php:t',
+            'checkbox': 'input:checkbox',
+            'check': 'input:checkbox',
+            'input:c': 'input:checkbox',
+            'input:b': 'input:button',
+            'input:h': 'input:hidden',
+            'hidden': 'input:hidden',
+            'submit': 'input:submit',
+            'input:s': 'input:submit',
+            'radio': 'input:radio',
+            'input:r': 'input:radio',
+            'text': 'input:text',
+            'pass': 'input:password',
+            'passwd': 'input:password',
+            'password': 'input:password',
+            'pw': 'input:password',
+            'input': 'input:text',
+            'input:t': 'input:text',
+            'linkcss': 'link:css',
+            'scriptsrc': 'script:src',
+            'jquery': 'script:jquery',
+            'jsapi': 'script:jsapi',
+            'html5': 'html:5',
+            'html4': 'html:4s',
+            'html4s': 'html:4s',
+            'html4t': 'html:4t',
+            'xhtml': 'html:xxs',
+            'xhtmlt': 'html:xt',
+            'xhtmls': 'html:xs',
+            'xhtml11': 'html:xxs',
+            'opt': 'option',
+            'st': 'strong',
+            'css': 'style',
+            'csss': 'link:css',
+            'css:src': 'link:css',
+            'csssrc': 'link:css',
+            'js': 'script',
+            'jss': 'script:src',
+            'js:src': 'script:src',
+            'jssrc': 'script:src',
+            }
+        self.short_tags = (
+            'area', 'base', 'basefont', 'br', 'embed', 'hr',
+            'input', 'img', 'link', 'param', 'meta')
+        self.required = {
+            'a':      {'href':''},
+            'base':   {'href':''},
+            'abbr':   {'title': ''},
+            'acronym':{'title': ''},
+            'bdo':    {'dir': ''},
+            'link':   {'rel': 'stylesheet', 'href': ''},
+            'style':  {'type': 'text/css'},
+            'script': {'type': 'text/javascript'},
+            'img':    {'src':'', 'alt':''},
+            'iframe': {'src': '', 'frameborder': '0'},
+            'embed':  {'src': '', 'type': ''},
+            'object': {'data': '', 'type': ''},
+            'param':  {'name': '', 'value': ''},
+            'form':   {'action': '', 'method': 'post'},
+            'input':  {'type': '', 'name': '', 'value': ''},
+            'area':   {'shape': '', 'coords': '', 'href': '', 'alt': ''},
+            'select': {'name': ''},
+            'option': {'value': ''},
+            'textarea':{'name': ''},
+            'meta':   {'content': ''},
         }
     short_tags = (
         'area', 'base', 'basefont', 'br', 'embed', 'hr',
@@ -331,7 +358,7 @@ class Parser:
         if self.options.has("xml"):
             self.dialect = XmlDialect()
         else:
-            self.dialect = HtmlDialect()
+            self.dialect = HtmlDialect(int(self.options.options['indent-spaces']))
         self.root = Element(parser=self)
         self.caret = []
         self.caret.append(self.root)
