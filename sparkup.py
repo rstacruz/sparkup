@@ -1051,8 +1051,7 @@ class Router:
             if str is not None:
                 lines = str
             else:
-                lines = [sys.stdin.read()]
-                lines = " ".join(lines)
+                lines = sys.stdin.read()
 
         except KeyboardInterrupt:
             pass
