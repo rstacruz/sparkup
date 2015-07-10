@@ -17,11 +17,11 @@ With Vundle
 If using Vundle, you can specify Sparkup as a bundle and installation will happen
 automatically.  Add this to your Vim configuration:
 
-       Bundle 'rstacruz/sparkup'
+       Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}           
 
 and run the standard installation command for Vundle:
 
-       :BundleInstall
+       :PluginInstall
 
 
 Manual installation
