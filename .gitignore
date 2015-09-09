@@ -9,6 +9,10 @@ distribution/
 cscope.out
 *~
 
+# symlinks created for pathogen
+/ftplugin
+/doc
+
 # Distribution files
 # */sparkup
 # */sparkup.py

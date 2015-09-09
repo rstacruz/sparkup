@@ -3,6 +3,7 @@
 import sys
 import sparkup
 
+
 class SparkupTest:
     options = {
         'textmate': True,
@@ -11,7 +12,8 @@ class SparkupTest:
         }
     options = {
         'default': {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True},
-        'guides':  {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'start-guide-format': 'Begin %s'}
+        'guides':  {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'start-guide-format': 'Begin %s'},
+        'namespaced-elements': {'textmate': True, 'no-last-newline': True, 'post-tag-guides': True, 'namespaced-elements': True }
         }
     cases = {
         'Simple test': {
@@ -45,11 +47,11 @@ class SparkupTest:
             },
         'Shortcut test': {
             'input': 'input:button',
-            'output': '<input type="button" class="button" value="$1" name="$2" />$0'
+            'output': '<input type="button" class="button" value="$1" name="$2">$0'
             },
         'Shortcut synonym test': {
             'input': 'button',
-            'output': '<input type="button" class="button" value="$1" name="$2" />$0'
+            'output': '<button>$1</button>$0',
             },
         'Child test': {
             'input': 'div>ul>li',
@@ -69,7 +71,7 @@ class SparkupTest:
             },
         'Multiplier test 2': {
             'input': 'ul > li.item-$*3',
-            'output': '<ul>\n    <li class="item-1">$1</li>\n    <li class="item-2">$2</li>\n    <li class="item-3">$3</li>\n</ul>$0' 
+            'output': '<ul>\n    <li class="item-1">$1</li>\n    <li class="item-2">$2</li>\n    <li class="item-3">$3</li>\n</ul>$0'
             },
         'Multiplier test 3': {
             'input': 'ul > li.item-$*3 > a',
@@ -89,7 +91,7 @@ class SparkupTest:
             },
         'Expand test': {
             'input': 'p#menu > table+ + ul',
-            'output': '<p id="menu">\n    <table cellspacing="0">\n        <tr>\n            <td>$1</td>\n        </tr>\n    </table>\n    <ul>$2</ul>\n</p>$0'
+            'output': '<p id="menu">\n    <table>\n        <tr>\n            <td>$1</td>\n        </tr>\n    </table>\n    <ul>$2</ul>\n</p>$0'
             },
         'Text with dot test': {
             'input': 'p { text.com }',
@@ -99,18 +101,53 @@ class SparkupTest:
             'input': 'p [attrib=text.com]',
             'output': '<p attrib="text.com">$1</p>$0'
             },
+        'PHP tag test': {
+            'input': 'php',
+            'output': '<?php\n    $1\n?>$0',
+            },
+        'Eruby tag test': {
+            'input': 'erb:p',
+            'output': '<%=  %>$0',
+            },
+        'ERB block test': {
+            'input': 'erb:b',
+            'output': '<% $2 %>\n    $1\n<% end %>$0'
+            },
+        'Nested curly braces test': {
+            'input': 'p{{{ title }}}',
+            'output': '<p>{{ title }}</p>$0'
+            },
+        'Nested curly braces test (#54)': {
+            'input': 'html>head>title{${title}}',
+            'output': '<html>\n    <head>\n        <title>${title}</title>\n    </head>\n</html>$0'
+            },
+        'HTML component element with dash test': {
+            'input': 'my-html-component',
+            'output': '<my-html-component>$1</my-html-component>$0' 
+            },
+        'XML namespaced element': {
+            'options': 'namespaced-elements',
+            'input': 'namespaced-ul',
+            'output': '<namespaced:ul>$1</namespaced:ul>$0'
+            },
         # Add: text test, broken test, multi-attribute tests, indentation test, start and end comments test
         }
+
     def run(self):
         """Run Forrest run!"""
+        failures = 0
 
-        print "Test results:"
+        print("Test results:")
         for name, case in self.cases.iteritems():
-            try:    options_key = case['options']
-            except: options_key = 'default'
+            try:
+                options_key = case['options']
+            except:
+                options_key = 'default'
 
-            try:    options = self.options[options_key]
-            except: options = self.options['default']
+            try:
+                options = self.options[options_key]
+            except:
+                options = self.options['default']
 
             # Output buffer
             r = sparkup.Router()
@@ -120,19 +157,24 @@ class SparkupTest:
 
             # Did it work?
             result = output == case['output']
-            if result: result_str = " OK "
-            else:      result_str = "FAIL"
+            if result:
+                result_str = " OK "
+            else:
+                result_str = "FAIL"
 
-            print " - %-30s [%s]" % (name, result_str)
+            print(" - %-30s [%s]" % (name, result_str))
             if not result:
-                print "= %s" % input.replace("\n", "\n= ")
-                print "Actual output (condensed):"
-                print " | '%s'" % output.replace("\n", r"\n").replace('"', '\"')
-                print "Actual output:"
-                print " | %s" % output.replace("\n", "\n | ")
-                print "Expected:"
-                print " | %s" % case['output'].replace("\n", "\ n| ")
+                failures += 1
+                print("= %s" % input.replace("\n", "\n= "))
+                print("Actual output (condensed):")
+                print(" | '%s'" % output.replace("\n", r"\n").replace('"', '\"'))
+                print("Actual output:")
+                print(" | %s" % output.replace("\n", "\n | "))
+                print("Expected:")
+                print(" | %s" % case['output'].replace("\n", "\ n| "))
+
+        return failures
 
 if __name__ == '__main__':
     s = SparkupTest()
-    s.run()
+    sys.exit(s.run())

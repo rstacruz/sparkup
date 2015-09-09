@@ -1,4 +1,7 @@
-SPARKUP_PY=sparkup
+# Makefile for sparkup distribution
+# TODO: this should use a separate build dir to copy SPARKUP_PY into.
+#       SPARKUP_PY should not reside in the Vim runtime dir (getting not updated via Git!)
+SPARKUP_PY=sparkup.py
 VERSION=`date '+%Y%m%d'`
 README=README.md
 
@@ -24,17 +27,22 @@ all-dist:
 	cp distribution/sparkup-${VERSION}.zip distribution/sparkup-latest.zip
 
 generic:
-	cat sparkup.py > generic/sparkup
+	cat ${SPARKUP_PY} > generic/sparkup
 	chmod +x generic/sparkup
 	#cp ${README} generic/sparkup-readme.txt
 
 textmate:
-	mkdir -p TextMate/Sparkup.tmbundle/Support
-	cp ${SPARKUP_PY} TextMate/Sparkup.tmbundle/Support/sparkup.py
 	#cp ${README} TextMate/sparkup-readme.txt
 
-vim:
-	mkdir -p vim/ftplugin/html vim/doc
-	cp ${SPARKUP_PY} vim/ftplugin/html/sparkup.py
-	# Add asteriks to title, so it gets matched by `:helptags`
-	sed '1s/.*/*\0*/' ${README} > vim/doc/sparkup.txt
+vim: vim/doc/sparkup.txt
+
+# create pathogen friendly structure
+vim-pathogen: vim ftplugin doc
+
+ftplugin doc:
+	ln -s vim/$@
+
+# Add asterisks to title, so it gets matched by `:helptags`
+vim/doc/sparkup.txt: ${README}
+	mkdir -p $(@D)
+	sed '1s/.*/*\0*/' $< > $@
