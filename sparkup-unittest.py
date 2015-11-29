@@ -113,6 +113,10 @@ class SparkupTest:
             'input': 'erb:b',
             'output': '<% $2 %>\n    $1\n<% end %>$0'
             },
+        'Tag name case (#49)': {
+            'input': 'groupId{foobar}',
+            'output': '<groupId>foobar</groupId>$0'
+            },
         'Nested curly braces test': {
             'input': 'p{{{ title }}}',
             'output': '<p>{{ title }}</p>$0'
