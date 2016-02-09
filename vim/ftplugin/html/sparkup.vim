@@ -20,6 +20,9 @@
 "   g:sparkupNextMapping (Default: '<c-n>') -
 "     Mapping used to jump to the next empty tag/attribute within insert mode.
 "
+"   g:sparkupPreviousMapping (Default: '<c-p>') -
+"     Mapping used to jump to the previous empty tag/attribute.
+"
 "   g:sparkupMaps (Default: 1) -
 "     Set up automatic mappings for Sparkup. If set to 0, this can be
 "     used to disable creation of any mappings, which is useful if
@@ -38,6 +41,10 @@ if !exists('g:sparkupNextMapping')
   let g:sparkupNextMapping = '<c-n>'
 endif
 
+if !exists('g:sparkupPreviousMapping')
+  let g:sparkupPreviousMapping = '<c-p>'
+endif
+
 if !exists('g:sparkupMaps')
   let g:sparkupMaps = 1
 endif
@@ -46,8 +53,9 @@ if !exists('g:sparkupMapsNormal')
   let g:sparkupMapsNormal = 0
 endif
 
-inoremap <buffer> <Plug>SparkupExecute <c-g>u<Esc>:call <SID>Sparkup()<cr>
-inoremap <buffer> <Plug>SparkupNext    <c-g>u<Esc>:call <SID>SparkupNext()<cr>
+inoremap <buffer> <Plug>SparkupExecute  <c-g>u<Esc>:call <SID>Sparkup()<cr>
+inoremap <buffer> <Plug>SparkupNext     <c-g>u<Esc>:call <SID>SparkupNext()<cr>
+inoremap <buffer> <Plug>SparkupPrevious <c-g>u<Esc>:call <SID>SparkupPrevious()<cr>
 
 if g:sparkupMaps
   if ! hasmapto('<Plug>SparkupExecute', 'i')
@@ -55,6 +63,9 @@ if g:sparkupMaps
   endif
   if ! hasmapto('<Plug>SparkupNext', 'i')
     exec 'imap <buffer> ' . g:sparkupNextMapping . ' <Plug>SparkupNext'
+  endif
+  if ! hasmapto('<Plug>SparkupPrevious', 'i')
+    exec 'imap <buffer> ' . g:sparkupPreviousMapping . ' <Plug>SparkupPrevious'
   endif
   if g:sparkupMapsNormal
     if ! hasmapto('<Plug>SparkupExecute', 'n')
@@ -124,6 +135,17 @@ function! s:SparkupNext()
         let p = getpos(".")
         let p[2] = p[2] + 1
         call setpos(".", p)
+        startinsert
+    endif
+endfunction
+
+function! s:SparkupPrevious()
+    " 1: empty tag, 2: empty attribute, 3: empty line
+    let n = search('><\/\|\(""\)\|^\s*$', 'bWp')
+    if n == 3
+        startinsert!
+    else
+        execute 'normal l'
         startinsert
     endif
 endfunction
