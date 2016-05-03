@@ -203,6 +203,10 @@ class HtmlDialect(Dialect):
                 'name': 'script',
                 'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
                 },
+            'script:angular': {
+                'name': 'script',
+                'attributes': { 'src': 'https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js' }
+                },
             'link:css': {
                 'name': 'link',
                 'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
