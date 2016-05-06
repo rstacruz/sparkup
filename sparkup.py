@@ -207,6 +207,10 @@ class HtmlDialect(Dialect):
                 'name': 'script',
                 'attributes': { 'src': 'https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js' }
                 },
+            'css:bootstrap': {
+                'name': 'link',
+                'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', 'media': 'all' },
+                },
             'link:css': {
                 'name': 'link',
                 'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
