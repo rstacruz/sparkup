@@ -203,6 +203,14 @@ class HtmlDialect(Dialect):
                 'name': 'script',
                 'text': '\n    google.load("jquery", "1.3.2");\n    google.setOnLoadCallback(function() {\n        \n    });\n'
                 },
+            'script:angular': {
+                'name': 'script',
+                'attributes': { 'src': 'https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js' }
+                },
+            'css:bootstrap': {
+                'name': 'link',
+                'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', 'media': 'all' },
+                },
             'link:css': {
                 'name': 'link',
                 'attributes': { 'rel': 'stylesheet', 'type': 'text/css', 'href': '', 'media': 'all' },
