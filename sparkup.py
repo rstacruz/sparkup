@@ -710,7 +710,7 @@ class Element:
             self.closing_tag is not None:
             between_tags = self.text
             if self.parser.options.has('open-empty-tags'):
-                between_tags += "\n\n" + indent
+                between_tags += "\n" + spaces + "\n" + indent
             output = "%s%s%s%s%s%s%s%s" % \
                 (start_guide, indent, self.get_opening_tag(),
                 between_tags,
