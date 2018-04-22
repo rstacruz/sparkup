@@ -647,16 +647,16 @@ class Element:
         if ((self.name == 'div') and
             (('id' in self.attributes) or ('class' in self.attributes))):
 
-            if (self.parser.options.has('post-tag-guides')):
+            if self.parser.options.has('post-tag-guides'):
                 guide = "<!-- /%s -->" % guide_str
 
-            if (self.parser.options.has('start-guide-format')):
+            if self.parser.options.has('start-guide-format'):
                 format = self.parser.options.get('start-guide-format')
                 try:    start_guide = format % guide_str
                 except: start_guide = (format + " " + guide_str).strip()
                 start_guide = "%s<!-- %s -->\n" % (indent, start_guide)
 
-            if (self.parser.options.has('end-guide-format')):
+            if self.parser.options.has('end-guide-format'):
                 format = self.parser.options.get('end-guide-format')
                 try:    end_guide = format % guide_str
                 except: end_guide = (format + " " + guide_str).strip()
@@ -678,7 +678,7 @@ class Element:
 
             # For expand divs: if there are no children (that is, `output`
             # is still blank despite above), fill it with a blank line.
-            if (output == ''): output = indent + spaces + "\n"
+            if output == '': output = indent + spaces + "\n"
 
             # If we're a root node and we have a prefix or suffix...
             # (Only the root node can have a prefix or suffix.)
@@ -923,7 +923,7 @@ class Token:
             else:
                 self.name = name
 
-        elif (name == ''): self.name = 'div'
+        elif name == '': self.name = 'div'
         else: self.name = name
 
         # Look for attributes
@@ -1013,15 +1013,15 @@ class Router:
     # -------------------------------------------------------------------------
 
     def start(self, options=None, str=None, ret=None):
-        if (options):
+        if options:
             self.options = Options(router=self, options=options, argv=None)
         else:
             self.options = Options(router=self, argv=sys.argv[1:], options=None)
 
-        if (self.options.has('help')):
+        if self.options.has('help'):
             return self.help()
 
-        elif (self.options.has('version')):
+        elif self.options.has('version'):
             return self.version()
 
         else:
@@ -1110,7 +1110,7 @@ class Options:
         options = {}
         for option in getoptions:
             key, value = option # '--version', ''
-            if (value == ''): value = True
+            if value == '': value = True
 
             # If the key is long, write it
             if key[0:2] == '--':
