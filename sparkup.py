@@ -1100,8 +1100,7 @@ class Options:
         try:
             getoptions, arguments = getopt.getopt(argv, short_keys, long_keys)
 
-        except getopt.GetoptError:
-            err = sys.exc_info()[1]
+        except getopt.GetoptError as err:
             sys.stderr.write("Options error: %s\n" % err)
             sys.stderr.write("Try --help for a list of arguments.\n")
             return router.exit()
