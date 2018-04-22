@@ -1105,6 +1105,11 @@ class Options:
             sys.stderr.write("Try --help for a list of arguments.\n")
             return router.exit()
 
+        if arguments:
+            sys.stderr.write("Unexpected argument(s): %s\n" % ' '.join(arguments))
+            sys.stderr.write("Try --help for a list of arguments.\n")
+            return router.exit()
+
         # Sort them out into options
         options = {}
         for option in getoptions:
