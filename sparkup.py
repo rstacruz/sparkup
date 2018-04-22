@@ -1136,7 +1136,7 @@ class Options:
         except: return None
 
     def has(self, attr):
-        try:    return self.options.has_key(attr)
+        try:    return attr in self.options
         except: return False
 
     options = {
