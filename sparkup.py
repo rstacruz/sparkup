@@ -1046,19 +1046,12 @@ class Router:
     def parse(self, str=None, ret=None):
         self.parser = Parser(self.options)
 
-        try:
-            # Read the files
-            if str is not None:
-                lines = str
-            else:
-                lines = sys.stdin.read()
+        # Read input
+        if str is not None:
+            lines = str
+        else:
+            lines = sys.stdin.read()
 
-        except KeyboardInterrupt:
-            pass
-
-        except:
-            sys.stderr.write("Reading failed.\n")
-            return
 
         try:
             self.parser.load_string(lines)
@@ -1171,5 +1164,8 @@ class Options:
 # =============================================================================
 
 if __name__ == "__main__":
-    z = Router()
-    z.start()
+    try:
+        z = Router()
+        z.start()
+    except KeyboardInterrupt:
+        pass
