@@ -408,18 +408,18 @@ class Parser:
         matches = re.findall(r'(></)|("")|(\n\s+)\n|(.|\s)', output)
         output = ''
         n = 1
-        for i in matches:
-            if i[0]:
+        for (i_0, i_1, i_2, i_3, *i_len) in matches:
+            if i_0:
                 output += '>$%i</' % n
                 n += 1
-            elif i[1]:
+            elif i_1:
                 output += '"$%i"' % n
                 n += 1
-            elif i[2]:
-                output += i[2] + '$%i\n' % n
+            elif i_2:
+                output += i_2 + '$%i\n' % n
                 n += 1
-            elif i[3]:
-                output += i[3]
+            elif i_3:
+                output += i_3
         output += "$0"
         return output
 
