@@ -723,7 +723,7 @@ class Element:
 
         return output
 
-    def get_default_tag(self):
+    def get_default_tag(self) -> str:
         """Returns the opening tag (without brackets).
 
         Usage:
@@ -737,13 +737,13 @@ class Element:
             output += ' %s="%s"' % (key, value)
         return output
 
-    def get_opening_tag(self):
+    def get_opening_tag(self) -> str:
         if self.opening_tag is None:
             return "<%s>" % self.get_default_tag()
         else:
             return self.opening_tag
 
-    def get_closing_tag(self):
+    def get_closing_tag(self) -> str:
         if self.closing_tag is None:
             return "</%s>" % self.name
         else:
@@ -1128,10 +1128,10 @@ class Options:
         for k, v in iteritems(options):
             self.options[k] = v
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr) -> dict[str, int | bool] | None:
         return self.get(attr)
 
-    def get(self, attr):
+    def get(self, attr) -> dict[str, int | bool] | None:
         try:    return self.options[attr]
         except: return None
 
