@@ -375,7 +375,7 @@ class Parser:
         self._tokenize()
         self._parse()
 
-    def render(self):
+    def render(self) -> str:
         """Renders.
         Called by [[Router]].
         """
@@ -401,7 +401,7 @@ class Parser:
     # Protected methods
     # -------------------------------------------------------------------------
 
-    def _textmatify(self, output):
+    def _textmatify(self, output) -> str:
         """Returns a version of the output with TextMate placeholders in it.
         """
 
@@ -539,7 +539,7 @@ class Parser:
     prefix = ''
 
     # Property: suffix
-    # (string) The trailing tag at the end.
+    # (String) The trailing tag at the end.
     suffix = ''
     pass
 
@@ -607,7 +607,7 @@ class Element:
 
         if self.populate: self._populate()
 
-    def render(self):
+    def render(self) -> str:
         """Renders the element, along with it's subelements, into HTML code.
 
         [Grouped under "Rendering methods"]
@@ -723,7 +723,7 @@ class Element:
 
         return output
 
-    def get_default_tag(self):
+    def get_default_tag(self) -> str:
         """Returns the opening tag (without brackets).
 
         Usage:
@@ -737,13 +737,13 @@ class Element:
             output += ' %s="%s"' % (key, value)
         return output
 
-    def get_opening_tag(self):
+    def get_opening_tag(self) -> str:
         if self.opening_tag is None:
             return "<%s>" % self.get_default_tag()
         else:
             return self.opening_tag
 
-    def get_closing_tag(self):
+    def get_closing_tag(self) -> str:
         if self.closing_tag is None:
             return "</%s>" % self.name
         else:
@@ -767,7 +767,7 @@ class Element:
 
         self.children.append(object)
 
-    def get_last_child(self):
+    def get_last_child(self) -> 'Element':
         """Returns the last child element which was [[append()]]ed to this element.
 
         Usage:
@@ -1128,14 +1128,14 @@ class Options:
         for k, v in iteritems(options):
             self.options[k] = v
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr) -> dict[str, int | bool] | None:
         return self.get(attr)
 
-    def get(self, attr):
+    def get(self, attr) -> dict[str, int | bool] | None:
         try:    return self.options[attr]
         except: return None
 
-    def has(self, attr):
+    def has(self, attr) -> bool:
         try:    return self.options.has_key(attr)
         except: return False
 
