@@ -767,7 +767,7 @@ class Element:
 
         self.children.append(object)
 
-    def get_last_child(self):
+    def get_last_child(self) -> 'Element':
         """Returns the last child element which was [[append()]]ed to this element.
 
         Usage:
