@@ -375,7 +375,7 @@ class Parser:
         self._tokenize()
         self._parse()
 
-    def render(self):
+    def render(self) -> str:
         """Renders.
         Called by [[Router]].
         """
@@ -401,7 +401,7 @@ class Parser:
     # Protected methods
     # -------------------------------------------------------------------------
 
-    def _textmatify(self, output):
+    def _textmatify(self, output) -> str:
         """Returns a version of the output with TextMate placeholders in it.
         """
 
@@ -539,7 +539,7 @@ class Parser:
     prefix = ''
 
     # Property: suffix
-    # (string) The trailing tag at the end.
+    # (String) The trailing tag at the end.
     suffix = ''
     pass
 
@@ -607,7 +607,7 @@ class Element:
 
         if self.populate: self._populate()
 
-    def render(self):
+    def render(self) -> str:
         """Renders the element, along with it's subelements, into HTML code.
 
         [Grouped under "Rendering methods"]
@@ -1135,7 +1135,7 @@ class Options:
         try:    return self.options[attr]
         except: return None
 
-    def has(self, attr):
+    def has(self, attr) -> bool:
         try:    return self.options.has_key(attr)
         except: return False
 
