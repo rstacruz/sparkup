@@ -384,7 +384,7 @@ class Parser:
         output = self.root.render()
 
         # Indent by whatever the input is indented with
-        indent = re.findall("^[\r\n]*(\s*)", self.str)[0]
+        indent = re.findall(r"^[\r\n]*(\s*)", self.str)[0]
         output = indent + output.replace("\n", "\n" + indent)
 
         # Strip newline if not needed
@@ -446,7 +446,7 @@ class Parser:
             str = str[:-len(match[0])]
 
         # Split by the element separators
-        for token in re.split('(<|>|\+(?!\\s*\+|$))', str):
+        for token in re.split(r'(<|>|\+(?!\\s*\+|$))', str):
             if token.strip() != '':
                 self.tokens.append(Token(token, parser=self))
 
@@ -904,7 +904,7 @@ class Token:
         """
 
         # Get the tag name. Default to DIV if none given.
-        name = re.findall('^([\w\-:]*)', self.str)[0]
+        name = re.findall(r'^([\w\-:]*)', self.str)[0]
         if self.parser.options.options['namespaced-elements'] == True:
             name = name.replace('-', ':')
 
@@ -928,7 +928,7 @@ class Token:
 
         # Look for attributes
         attribs = []
-        for attrib in re.findall('\[([^\]]*)\]', self.str):
+        for attrib in re.findall(r'\[([^\]]*)\]', self.str):
             attribs.append(attrib)
             self.str = self.str.replace("[" + attrib + "]", "")
         if len(attribs) > 0:
@@ -939,14 +939,14 @@ class Token:
 
         # Try looking for text
         text = None
-        for text in re.findall('\{(.*?)\}(?!\})', self.str):
+        for text in re.findall(r'\{(.*?)\}(?!\})', self.str):
             self.str = self.str.replace("{" + text + "}", "")
         if text is not None:
             self.text = text
 
         # Get the class names
         classes = []
-        for classname in re.findall('\.([\$a-zA-Z0-9_\-\&]+)', self.str):
+        for classname in re.findall(r'\.([\$a-zA-Z0-9_\-\&]+)', self.str):
             classes.append(classname)
         if len(classes) > 0:
             try:    self.attributes['class']
@@ -956,19 +956,19 @@ class Token:
 
         # Get the ID
         id = None
-        for id in re.findall('#([\$a-zA-Z0-9_\-\&]+)', self.str): pass
+        for id in re.findall(r'#([\$a-zA-Z0-9_\-\&]+)', self.str): pass
         if id is not None:
             self.attributes['id'] = id
 
         # See if there's a multiplier (e.g., "li*3")
         multiplier = None
-        for multiplier in re.findall('\*\s*([0-9]+)', self.str): pass
+        for multiplier in re.findall(r'\*\s*([0-9]+)', self.str): pass
         if multiplier is not None:
             self.multiplier = int(multiplier)
 
         # Populate flag (e.g., ul+)
         flags = None
-        for flags in re.findall('[\+\!]+$', self.str): pass
+        for flags in re.findall(r'[\+\!]+$', self.str): pass
         if flags is not None:
             if '+' in flags: self.populate = True
             if '!' in flags: self.expand = True
