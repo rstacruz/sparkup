@@ -446,7 +446,12 @@ class Parser:
             str = str[:-len(match[0])]
 
         # Split by the element separators
-        for token in re.split('(<|>|\+(?!\\s*\+|$))', str):
+        tokens = re.split(r'(<|>|\+(?!\\s*\+|$))', str)
+        for i in range(0, len(tokens) - 1):
+            while i < len(tokens) - 1 and re.search(r'\[[^\]]*$|\{[^\}]*$', tokens[i]):
+                tokens[i] += tokens[i+1]
+                tokens.pop(i+1)
+        for token in tokens:
             if token.strip() != '':
                 self.tokens.append(Token(token, parser=self))
 
